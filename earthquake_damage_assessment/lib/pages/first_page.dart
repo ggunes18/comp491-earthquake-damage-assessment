@@ -7,17 +7,26 @@ class FirstPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
-              kuHelpText(),
-              const SizedBox(height: 10),
+              Container(
+                height: height * 0.5,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/kuhelp.png"),
+                    //fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              //kuHelpText(),
+              const SizedBox(height: 20),
               explanationText(),
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
               signInButton(context),
               const SizedBox(height: 50),
               alreadyAUser(context),
@@ -52,12 +61,16 @@ Padding explanationText() {
     padding: const EdgeInsets.symmetric(horizontal: 25.0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: const [
-        Text(
-          'Explanation...',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 14,
+      children: [
+        Container(
+          width: 375,
+          child: Text(
+            'Bridging the communication gap between earthquake victims and aid groups. ',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+            ),
           ),
         ),
       ],
@@ -79,18 +92,18 @@ TextButton signInButton(context) {
       margin: const EdgeInsets.symmetric(horizontal: 60),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: const Color(0xffB45151)),
+          color: Color.fromRGBO(199, 0, 56, 0.89)),
       child: const Center(
         child: Text("Sign In",
             style: TextStyle(
-                color: Color.fromARGB(255, 255, 255, 255), fontSize: 20)),
+                color: Color.fromRGBO(255, 255, 255, 1), fontSize: 20)),
       ),
     ),
   );
 }
 
-Row alreadyAUser(context) {
-  return Row(
+Column alreadyAUser(context) {
+  return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       const Text(

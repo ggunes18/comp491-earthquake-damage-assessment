@@ -42,7 +42,7 @@ Text loginText() {
   return const Text(
     'LOGIN',
     style: TextStyle(
-      color: Color(0XFFB45151),
+      color: Color.fromRGBO(199, 0, 56, 0.89),
       fontSize: 30,
     ),
   );
@@ -119,7 +119,7 @@ TextButton loginButton() {
       margin: const EdgeInsets.symmetric(horizontal: 60),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: const Color(0xffB45151)),
+          color: Color.fromRGBO(199, 0, 56, 0.89)),
       child: const Center(
         child: Text("Login",
             style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
