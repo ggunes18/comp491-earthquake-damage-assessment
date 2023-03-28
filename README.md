@@ -1,1 +1,0 @@
-# comp491-earthquake-damage-assessment
