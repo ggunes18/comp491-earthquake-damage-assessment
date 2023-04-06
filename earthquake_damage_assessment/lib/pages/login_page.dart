@@ -1,10 +1,11 @@
+import 'package:earthquake_damage_assessment/pages/first_page.dart';
+import 'package:earthquake_damage_assessment/service/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-
-  void login() {}
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +18,18 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 50),
               loginText(),
               const SizedBox(height: 10),
+              _entryField(
+                  "Please enter your email or username", _mailController),
               texts("Email or Username"),
-              textFields("Please enter your email or username"),
               const SizedBox(height: 10),
               texts("Password"),
               const SizedBox(height: 10),
-              textFields("Please enter your password"),
+              _entryField("Please enter your password", _passwordController),
               const SizedBox(height: 10),
               remeberMeCheck(),
               forgotPassword(),
               const SizedBox(height: 25),
-              loginButton(),
+              loginButton(context),
               const SizedBox(height: 50),
               notAMember(context),
             ],
@@ -36,6 +38,25 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+}
+
+final TextEditingController _mailController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
+
+Future<void> login(context) async {
+  await AuthService()
+      .logIn(mail: _mailController.text, password: _passwordController.text);
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => FirstPage()),
+  );
+}
+
+Widget _entryField(String title, TextEditingController controller) {
+  return TextField(
+    controller: controller,
+    decoration: InputDecoration(labelText: title),
+  );
 }
 
 Text loginText() {
@@ -110,9 +131,11 @@ Padding forgotPassword() {
   );
 }
 
-TextButton loginButton() {
+TextButton loginButton(context) {
   return TextButton(
-    onPressed: () {},
+    onPressed: () {
+      login(context);
+    },
     child: Container(
       height: 50,
       width: 150,
