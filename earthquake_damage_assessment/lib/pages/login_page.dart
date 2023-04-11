@@ -1,4 +1,4 @@
-import 'package:earthquake_damage_assessment/pages/first_page.dart';
+import 'package:earthquake_damage_assessment/pages/home_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,7 @@ Future<void> login(context) async {
       .logIn(mail: _mailController.text, password: _passwordController.text);
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => FirstPage()),
+    MaterialPageRoute(builder: (context) => const HomePage()),
   );
 }
 
