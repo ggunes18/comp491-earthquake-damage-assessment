@@ -1,10 +1,11 @@
+import 'package:earthquake_damage_assessment/pages/first_page.dart';
 import 'package:flutter/material.dart';
+import 'package:earthquake_damage_assessment/service/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
 
 class SignInPage extends StatelessWidget {
   SignInPage({super.key});
-
-  void signUserIn() {}
 
   @override
   Widget build(BuildContext context) {
@@ -18,17 +19,17 @@ class SignInPage extends StatelessWidget {
               signUpText(),
               const SizedBox(height: 10),
               texts("Email"),
-              textFields("Please enter your email"),
+              _entryField("Please enter your email", _mailController),
               const SizedBox(height: 10),
               texts("Username"),
-              textFields("Please enter your username"),
+              _entryField("Please enter your username", _userNameController),
               const SizedBox(height: 10),
               texts("Password"),
-              textFields("Please enter your password"),
+              _entryField("Please enter your password", _passwordController),
               const SizedBox(height: 10),
               victimHelperCheckBox(),
               const SizedBox(height: 25),
-              signInButton(),
+              signInButton(context),
               const SizedBox(height: 50),
               alreadyAMember(context),
             ],
@@ -37,6 +38,28 @@ class SignInPage extends StatelessWidget {
       ),
     );
   }
+}
+
+final TextEditingController _mailController = TextEditingController();
+final TextEditingController _userNameController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
+
+Widget _entryField(String title, TextEditingController controller) {
+  return TextField(
+    controller: controller,
+    decoration: InputDecoration(labelText: title),
+  );
+}
+
+Future<void> signUserIn(context) async {
+  await AuthService().signIn(
+      mail: _mailController.text,
+      userName: _userNameController.text,
+      password: _passwordController.text);
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => LoginPage()),
+  );
 }
 
 Text signUpText() {
@@ -99,9 +122,11 @@ Padding victimHelperCheckBox() {
   );
 }
 
-TextButton signInButton() {
+TextButton signInButton(context) {
   return TextButton(
-    onPressed: () {},
+    onPressed: () {
+      signUserIn(context);
+    },
     child: Container(
       height: 50,
       width: 150,
