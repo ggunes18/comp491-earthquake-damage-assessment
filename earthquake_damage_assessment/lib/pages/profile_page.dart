@@ -22,7 +22,7 @@ AppBar appBarButtons() {
     actions: [
       IconButton(
         onPressed: () {},
-        icon: Icon(Icons.ios_share),
+        icon: Icon(Icons.edit),
         color: Colors.black,
       )
     ],
