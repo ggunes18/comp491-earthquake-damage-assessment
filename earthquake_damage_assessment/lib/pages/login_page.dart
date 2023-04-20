@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-
-  void login() {}
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class LoginPage extends StatelessWidget {
               remeberMeCheck(),
               forgotPassword(),
               const SizedBox(height: 25),
-              loginButton(),
+              loginButton(context),
               const SizedBox(height: 50),
               notAMember(context),
             ],
@@ -110,9 +109,11 @@ Padding forgotPassword() {
   );
 }
 
-TextButton loginButton() {
+TextButton loginButton(context) {
   return TextButton(
-    onPressed: () {},
+    onPressed: () {
+      login(context);
+    },
     child: Container(
       height: 50,
       width: 150,
@@ -155,5 +156,12 @@ Row notAMember(context) {
         },
       ),
     ],
+  );
+}
+
+void login(context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const HomePage()),
   );
 }

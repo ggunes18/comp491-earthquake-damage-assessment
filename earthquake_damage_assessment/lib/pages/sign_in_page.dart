@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart';
+import 'home_page.dart';
 
 class SignInPage extends StatelessWidget {
   SignInPage({super.key});
-
-  void signUserIn() {}
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class SignInPage extends StatelessWidget {
               const SizedBox(height: 10),
               victimHelperCheckBox(),
               const SizedBox(height: 25),
-              signInButton(),
+              signInButton(context),
               const SizedBox(height: 50),
               alreadyAMember(context),
             ],
@@ -99,9 +98,11 @@ Padding victimHelperCheckBox() {
   );
 }
 
-TextButton signInButton() {
+TextButton signInButton(context) {
   return TextButton(
-    onPressed: () {},
+    onPressed: () {
+      signUserIn(context);
+    },
     child: Container(
       height: 50,
       width: 150,
@@ -144,5 +145,12 @@ Row alreadyAMember(context) {
         },
       ),
     ],
+  );
+}
+
+void signUserIn(context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const HomePage()),
   );
 }
