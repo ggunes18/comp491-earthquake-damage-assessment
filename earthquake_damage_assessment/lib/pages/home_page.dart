@@ -1,5 +1,8 @@
 import 'package:earthquake_damage_assessment/pages/home_page_buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import "profile_page.dart";
+import 'package:geolocator/geolocator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,9 +12,46 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final PageController pageController = PageController();
+  final pages = [HomePage(), ProfilePage()];
+
+  int currentIndex = 0;
+  void onItemTapped(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+    pageController.jumpToPage(index);
+  }
+
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission().then((value) => ,)
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return position;
+  }
+
+  void getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    var lastPosition = await Geolocator.getLastKnownPosition();
+    var lat = position.latitude;
+    var long = position.longitude;
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+        /* body: PageView(
+          controller: pageController,
+          children: pages,
+          onPageChanged: (int index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+        ), */
         backgroundColor: Colors.white,
         bottomNavigationBar: BottomNavigationBar(
           items: const [
@@ -24,7 +64,8 @@ class _HomePageState extends State<HomePage> {
               label: 'Profile',
             ),
           ],
-          currentIndex: 0,
+          currentIndex: currentIndex,
+          onTap: onItemTapped,
           selectedItemColor: Color.fromRGBO(199, 0, 56, 0.89),
         ),
         body: SafeArea(
@@ -50,33 +91,37 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 20),
 
                   // search bar
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search,
-                          color: Colors.grey[600],
-                        ),
-                        SizedBox(width: 7),
-                        Text(
-                          "Search Safe Location",
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
+                  TextField(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      hintText: "Search for Safe Location",
+                      prefixIcon: Icon(Icons.search),
+                      prefixIconColor: Colors.grey[600],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
 
                   // Map Integration
-                  //TO DO
+
+                  Container(
+                    height: 450,
+                    width: screenWidth,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(0, 0),
+                        zoom: 10,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
