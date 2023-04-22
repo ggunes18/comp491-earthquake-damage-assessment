@@ -12,46 +12,59 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final PageController pageController = PageController();
-  final pages = [HomePage(), ProfilePage()];
+  int _selectedIndex = 0;
 
-  int currentIndex = 0;
-  void onItemTapped(int index) {
+  void _onItemTapped(int index) {
     setState(() {
-      currentIndex = index;
+      _selectedIndex = index;
     });
-    pageController.jumpToPage(index);
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      );
+    }
   }
+
+  static const CameraPosition initialCameraPosition = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14,
+  );
+
+  late GoogleMapController mapController;
+  Set<Marker> markers = {};
 
   Future<Position> getUserCurrentLocation() async {
-    await Geolocator.requestPermission().then((value) => ,)
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    bool serviceEnables;
+    LocationPermission permission;
+
+    serviceEnables = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnables) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
     return position;
-  }
-
-  void getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    var lastPosition = await Geolocator.getLastKnownPosition();
-    var lat = position.latitude;
-    var long = position.longitude;
-
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-        /* body: PageView(
-          controller: pageController,
-          children: pages,
-          onPageChanged: (int index) {
-            setState(() {
-              currentIndex = index;
-            });
-          },
-        ), */
         backgroundColor: Colors.white,
         bottomNavigationBar: BottomNavigationBar(
           items: const [
@@ -64,8 +77,8 @@ class _HomePageState extends State<HomePage> {
               label: 'Profile',
             ),
           ],
-          currentIndex: currentIndex,
-          onTap: onItemTapped,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
           selectedItemColor: Color.fromRGBO(199, 0, 56, 0.89),
         ),
         body: SafeArea(
@@ -116,11 +129,36 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(0, 0),
-                        zoom: 10,
-                      ),
+                      initialCameraPosition: initialCameraPosition,
+                      markers: markers,
+                      mapType: MapType.normal,
+                      onMapCreated: (GoogleMapController controller) {
+                        mapController = controller;
+                      },
                     ),
+                    /*
+                    floatingActionButton: FloatingActionButton.extended(
+                      onPressed: () async {
+                        Position position = await getUserCurrentLocation();
+                        mapController.animateCamera(
+                          CameraUpdate.newCameraPosition(
+                            CameraPosition(
+                              target:
+                                  LatLng(position.latitude, position.longitude),
+                              zoom: 15,
+                            ),
+                          ),
+                        );
+                        markers.clear();
+                        markers.add(Marker(
+                            markerId: const MarkerId("Current Location"),
+                            position:
+                                LatLng(position.latitude, position.longitude)));
+                        setState(() {});
+                      },
+                      icon: Icon(Icons.location_searching),
+                    ),
+                    */
                   ),
                 ],
               ),
