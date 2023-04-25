@@ -1,5 +1,6 @@
 import 'package:earthquake_damage_assessment/pages/home_page_buttons.dart';
 import 'package:flutter/material.dart';
+import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,6 +10,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      );
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,8 +39,9 @@ class _HomePageState extends State<HomePage> {
               label: 'Profile',
             ),
           ],
-          currentIndex: 0,
+          currentIndex: _selectedIndex,
           selectedItemColor: Color.fromRGBO(199, 0, 56, 0.89),
+          onTap: _onItemTapped,
         ),
         body: SafeArea(
           child: Column(children: [

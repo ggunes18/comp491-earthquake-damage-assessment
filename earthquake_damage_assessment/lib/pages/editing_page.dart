@@ -1,53 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'home_page.dart';
+import 'profile_page.dart';
 
-class RequestPage extends StatelessWidget {
-  final String request_type;
-
-  RequestPage({super.key, required this.request_type});
+class EditingPage extends StatelessWidget {
+  EditingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(
-          color: Colors.black,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
-          },
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
-              requestText(request_type),
+              editText(),
               const SizedBox(height: 10),
-              texts("Your Name"),
-              textFields("Enter your name."),
+              texts("Name and Surname"),
+              textFields("Please enter your name and surname"),
               const SizedBox(height: 10),
               texts("Location"),
-              textFields("Enter the location to send help."),
+              textFields("Please enter your location"),
               const SizedBox(height: 10),
-              texts("Needs"),
-              textFields("If you need anything write it here."),
-              const SizedBox(height: 10),
-              texts("Extra Information"),
-              textFields("Enter extra informtion if it is needed"),
-              const SizedBox(
-                height: 15,
-              ),
-              texts("Emergency Level"),
-              retingBar(),
-              const SizedBox(height: 20),
+              texts("Biography"),
+              textFields("Please enter your biography"),
+              const SizedBox(height: 25),
               submitButton(context),
             ],
           ),
@@ -57,12 +33,12 @@ class RequestPage extends StatelessWidget {
   }
 }
 
-Text requestText(request_text) {
-  return Text(
-    request_text,
+Text editText() {
+  return const Text(
+    'Enter your new information',
     style: TextStyle(
       color: Color.fromRGBO(199, 0, 56, 0.89),
-      fontSize: 30,
+      fontSize: 20,
     ),
   );
 }
@@ -101,33 +77,12 @@ Padding textFields(hintText) {
   );
 }
 
-RatingBar retingBar() {
-  return RatingBar(
-    initialRating: 0,
-    direction: Axis.horizontal,
-    allowHalfRating: false,
-    itemCount: 5,
-    ratingWidget: RatingWidget(
-      full: Icon(
-        Icons.circle_rounded,
-        color: Color.fromRGBO(199, 0, 56, 0.89),
-      ),
-      half: Icon(Icons.circle_rounded),
-      empty: Icon(Icons.circle_outlined),
-    ),
-    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-    onRatingUpdate: (rating) {
-      print(rating);
-    },
-  );
-}
-
 TextButton submitButton(context) {
   return TextButton(
     onPressed: () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => ProfilePage()),
       );
     },
     child: Container(
@@ -138,7 +93,7 @@ TextButton submitButton(context) {
           borderRadius: BorderRadius.circular(50),
           color: Color.fromRGBO(199, 0, 56, 0.89)),
       child: const Center(
-        child: Text("Submit",
+        child: Text("Login",
             style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
       ),
     ),

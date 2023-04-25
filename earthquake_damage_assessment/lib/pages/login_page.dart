@@ -3,6 +3,7 @@ import 'package:earthquake_damage_assessment/service/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -178,5 +179,12 @@ Row notAMember(context) {
         },
       ),
     ],
+  );
+}
+
+void login(context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const HomePage()),
   );
 }

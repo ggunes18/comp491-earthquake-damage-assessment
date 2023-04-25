@@ -1,3 +1,4 @@
+import 'package:earthquake_damage_assessment/pages/editing_page.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -6,13 +7,13 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarButtons(),
+      appBar: appBarButtons(context),
       body: body(),
     );
   }
 }
 
-AppBar appBarButtons() {
+AppBar appBarButtons(context) {
   return AppBar(
     leading: BackButton(
       color: Colors.black,
@@ -21,8 +22,13 @@ AppBar appBarButtons() {
     elevation: 0,
     actions: [
       IconButton(
-        onPressed: () {},
-        icon: Icon(Icons.ios_share),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => EditingPage()),
+          );
+        },
+        icon: Icon(Icons.edit),
         color: Colors.black,
       )
     ],
