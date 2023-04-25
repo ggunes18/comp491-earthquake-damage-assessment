@@ -1,6 +1,8 @@
 import 'package:earthquake_damage_assessment/pages/home_page_buttons.dart';
 import 'package:flutter/material.dart';
-import 'profile_page.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import "profile_page.dart";
+import 'package:geolocator/geolocator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,9 +25,45 @@ class _HomePageState extends State<HomePage> {
       );
     }
   }
+
+  static const CameraPosition initialCameraPosition = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14,
+  );
+
+  late GoogleMapController mapController;
+  Set<Marker> markers = {};
+
+  Future<Position> getUserCurrentLocation() async {
+    bool serviceEnables;
+    LocationPermission permission;
+
+    serviceEnables = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnables) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    return position;
+  }
   
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: Colors.white,
         bottomNavigationBar: BottomNavigationBar(
@@ -40,6 +78,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
           currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
           selectedItemColor: Color.fromRGBO(199, 0, 56, 0.89),
           onTap: _onItemTapped,
         ),
@@ -66,33 +105,62 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 20),
 
                   // search bar
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search,
-                          color: Colors.grey[600],
-                        ),
-                        SizedBox(width: 7),
-                        Text(
-                          "Search Safe Location",
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 20,
-                          ),
-                        ),
-                      ],
+                  TextField(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      hintText: "Search for Safe Location",
+                      prefixIcon: Icon(Icons.search),
+                      prefixIconColor: Colors.grey[600],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
 
                   // Map Integration
-                  //TO DO
+
+                  Container(
+                    height: 450,
+                    width: screenWidth,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: GoogleMap(
+                      initialCameraPosition: initialCameraPosition,
+                      markers: markers,
+                      mapType: MapType.normal,
+                      onMapCreated: (GoogleMapController controller) {
+                        mapController = controller;
+                      },
+                    ),
+                    /*
+                    floatingActionButton: FloatingActionButton.extended(
+                      onPressed: () async {
+                        Position position = await getUserCurrentLocation();
+                        mapController.animateCamera(
+                          CameraUpdate.newCameraPosition(
+                            CameraPosition(
+                              target:
+                                  LatLng(position.latitude, position.longitude),
+                              zoom: 15,
+                            ),
+                          ),
+                        );
+                        markers.clear();
+                        markers.add(Marker(
+                            markerId: const MarkerId("Current Location"),
+                            position:
+                                LatLng(position.latitude, position.longitude)));
+                        setState(() {});
+                      },
+                      icon: Icon(Icons.location_searching),
+                    ),
+                    */
+                  ),
                 ],
               ),
             ),
