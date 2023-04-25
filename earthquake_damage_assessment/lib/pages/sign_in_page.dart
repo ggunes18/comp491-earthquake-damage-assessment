@@ -172,10 +172,3 @@ Row alreadyAMember(context) {
     ],
   );
 }
-
-void signUserIn(context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const HomePage()),
-  );
-}

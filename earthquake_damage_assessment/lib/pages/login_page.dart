@@ -181,10 +181,3 @@ Row notAMember(context) {
     ],
   );
 }
-
-void login(context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const HomePage()),
-  );
-}

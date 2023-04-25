@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
     Position position = await Geolocator.getCurrentPosition();
     return position;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -78,7 +78,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
           currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
           selectedItemColor: Color.fromRGBO(199, 0, 56, 0.89),
           onTap: _onItemTapped,
         ),
