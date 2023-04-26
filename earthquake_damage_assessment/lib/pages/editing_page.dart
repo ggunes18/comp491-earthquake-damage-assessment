@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'profile_page.dart';
+import 'package:earthquake_damage_assessment/pages/first_page.dart';
+import 'package:flutter/material.dart';
+import 'package:earthquake_damage_assessment/service/edituser.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'login_page.dart';
+import 'home_page.dart';
 
 class EditingPage extends StatelessWidget {
   EditingPage({super.key});
@@ -16,21 +22,34 @@ class EditingPage extends StatelessWidget {
               editText(),
               const SizedBox(height: 10),
               texts("Name and Surname"),
-              textFields("Please enter your name and surname"),
+              _entryField(
+                  "Please enter your name and surname", _nameController),
               const SizedBox(height: 10),
               texts("Location"),
-              textFields("Please enter your location"),
+              _entryField("Please enter your location", _locationController),
               const SizedBox(height: 10),
               texts("Biography"),
-              textFields("Please enter your biography"),
+              _entryField("Please enter your biography", _biographyController),
               const SizedBox(height: 25),
-              submitButton(context),
+              submitButton(context, _nameController, _locationController,
+                  _biographyController),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+final TextEditingController _nameController = TextEditingController();
+final TextEditingController _locationController = TextEditingController();
+final TextEditingController _biographyController = TextEditingController();
+
+Widget _entryField(String title, TextEditingController controller) {
+  return TextField(
+    controller: controller,
+    decoration: InputDecoration(labelText: title),
+  );
 }
 
 Text editText() {
@@ -77,9 +96,32 @@ Padding textFields(hintText) {
   );
 }
 
-TextButton submitButton(context) {
+Future<void> savecredentials(
+  context,
+  TextEditingController nameController,
+  TextEditingController locationController,
+  TextEditingController biographyController,
+) async {
+  //NEW CODE
+  await SaveService().save(
+      namesurname: _nameController.text,
+      location: _locationController.text,
+      biography: _biographyController.text);
+}
+
+TextButton submitButton(
+    context,
+    TextEditingController nameController,
+    TextEditingController locationController,
+    TextEditingController biographyController) {
   return TextButton(
     onPressed: () {
+      savecredentials(
+        context,
+        nameController,
+        locationController,
+        biographyController,
+      ); //NEW CODE
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ProfilePage()),
