@@ -16,7 +16,7 @@ class HomePageButton extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => RequestPage(
-                    request_type: text,
+                    requestType: text,
                   )),
         );
       },

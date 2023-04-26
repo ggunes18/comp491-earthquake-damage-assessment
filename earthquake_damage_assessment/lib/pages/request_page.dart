@@ -1,11 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:get/get.dart';
 import 'home_page.dart';
 
-class RequestPage extends StatelessWidget {
-  final String request_type;
+final TextEditingController _nameController = TextEditingController();
+final TextEditingController _locationController = TextEditingController();
+final TextEditingController _needsController = TextEditingController();
+final TextEditingController _infoController = TextEditingController();
+double emergencyLevel = 0;
 
-  RequestPage({super.key, required this.request_type});
+class RequestPage extends StatelessWidget {
+  final String requestType;
+
+  RequestPage({super.key, required this.requestType});
 
   @override
   Widget build(BuildContext context) {
@@ -29,26 +37,29 @@ class RequestPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
-              requestText(request_type),
+              requestText(requestType),
               const SizedBox(height: 10),
               texts("Your Name"),
-              textFields("Enter your name."),
+              textFields("Enter your name.", _nameController),
               const SizedBox(height: 10),
               texts("Location"),
-              textFields("Enter the location to send help."),
+              textFields(
+                  "Enter the location to send help.", _locationController),
               const SizedBox(height: 10),
               texts("Needs"),
-              textFields("If you need anything write it here."),
+              textFields(
+                  "If you need anything write it here.", _needsController),
               const SizedBox(height: 10),
               texts("Extra Information"),
-              textFields("Enter extra informtion if it is needed"),
+              textFields(
+                  "Enter extra informtion if it is needed", _infoController),
               const SizedBox(
                 height: 15,
               ),
               texts("Emergency Level"),
-              retingBar(),
+              ratingBar(),
               const SizedBox(height: 20),
-              submitButton(context),
+              submitButton(context, requestType),
             ],
           ),
         ),
@@ -85,10 +96,11 @@ Padding texts(text) {
   );
 }
 
-Padding textFields(hintText) {
+Padding textFields(hintText, controllerType) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 25.0),
     child: TextField(
+      controller: controllerType,
       decoration: InputDecoration(
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
@@ -101,7 +113,7 @@ Padding textFields(hintText) {
   );
 }
 
-RatingBar retingBar() {
+RatingBar ratingBar() {
   return RatingBar(
     initialRating: 0,
     direction: Axis.horizontal,
@@ -117,18 +129,24 @@ RatingBar retingBar() {
     ),
     itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
     onRatingUpdate: (rating) {
+      emergencyLevel = rating;
       print(rating);
     },
   );
 }
 
-TextButton submitButton(context) {
+TextButton submitButton(context, requestType) {
   return TextButton(
     onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      Get.defaultDialog(
+          title: "Are your sure about request information?",
+          middleText:
+              "Your name: ${_nameController.text}\n Your location: ${_locationController.text}\n Your needs: ${_needsController.text}\n Extra information: ${_infoController.text}\n Emergency level: $emergencyLevel\n",
+          textConfirm: "Yes",
+          textCancel: "Edit request",
+          onConfirm: () {
+            addRequest(context, requestType);
+          });
     },
     child: Container(
       height: 50,
@@ -142,5 +160,32 @@ TextButton submitButton(context) {
             style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
       ),
     ),
+  );
+}
+
+Future<void> addRequest(context, requestType) async {
+  await FirebaseFirestore.instance.collection("RequestTest").add({
+    "type": requestType,
+    "name": _nameController.text,
+    "location": _locationController.text,
+    "need": _needsController.text,
+    "info": _infoController.text,
+    "emergency": emergencyLevel
+  });
+  Get.defaultDialog(
+    title: "Your request is saved.",
+    content: Container(),
+    textConfirm: "OK",
+    onConfirm: () {
+      _nameController.text = "";
+      _locationController.text = "";
+      _needsController.text = "";
+      _infoController.text = "";
+      emergencyLevel = 0;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    },
   );
 }

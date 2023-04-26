@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
 import 'home_page.dart';
 
+final TextEditingController _mailController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
+
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
@@ -19,13 +22,13 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 50),
               loginText(),
               const SizedBox(height: 10),
-              _entryField(
-                  "Please enter your email or username", _mailController),
               texts("Email or Username"),
+              textFields(
+                  "Please enter your email or username", _mailController),
               const SizedBox(height: 10),
               texts("Password"),
               const SizedBox(height: 10),
-              _entryField("Please enter your password", _passwordController),
+              textFields("Please enter your password", _passwordController),
               const SizedBox(height: 10),
               remeberMeCheck(),
               forgotPassword(),
@@ -39,25 +42,6 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
-}
-
-final TextEditingController _mailController = TextEditingController();
-final TextEditingController _passwordController = TextEditingController();
-
-Future<void> login(context) async {
-  await AuthService()
-      .logIn(mail: _mailController.text, password: _passwordController.text);
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const HomePage()),
-  );
-}
-
-Widget _entryField(String title, TextEditingController controller) {
-  return TextField(
-    controller: controller,
-    decoration: InputDecoration(labelText: title),
-  );
 }
 
 Text loginText() {
@@ -88,10 +72,11 @@ Padding texts(text) {
   );
 }
 
-Padding textFields(hintText) {
+Padding textFields(hintText, controllerType) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 25.0),
     child: TextField(
+      controller: controllerType,
       decoration: InputDecoration(
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
@@ -179,5 +164,14 @@ Row notAMember(context) {
         },
       ),
     ],
+  );
+}
+
+Future<void> login(context) async {
+  await AuthService()
+      .logIn(mail: _mailController.text, password: _passwordController.text);
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const HomePage()),
   );
 }
