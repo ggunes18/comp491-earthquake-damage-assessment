@@ -1,5 +1,33 @@
 import 'package:earthquake_damage_assessment/pages/editing_page.dart';
 import 'package:flutter/material.dart';
+import 'dart:ffi';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+/*
+class Save2 {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  User? get currentUser => _firebaseAuth.currentUser;
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+  Future<Void?> save(
+      {required String namesurname,
+      required String location,
+      required String biography}) async {
+    final currentUser = _firebaseAuth.currentUser;
+    final docRef = _firestore.collection('UserTest').doc(currentUser?.uid);
+    final docSnapshot = await docRef.get();
+    final data = docSnapshot.data();
+    final mail = data?['mail'];
+    final password = data?['password'];
+    final username = data?['userName'];
+    if (data != null && data.containsKey('NameSurname')) {
+    } else {}
+    if (data != null && data.containsKey('Location')) {
+    } else {}
+    if (data != null && data.containsKey('Biography')) {
+    } else {}
+  }
+}*/
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
