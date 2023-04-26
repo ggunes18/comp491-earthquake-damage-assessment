@@ -5,6 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'login_page.dart';
 import 'home_page.dart';
 
+final TextEditingController _mailController = TextEditingController();
+final TextEditingController _userNameController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
+
 class SignInPage extends StatelessWidget {
   SignInPage({super.key});
 
@@ -20,13 +24,13 @@ class SignInPage extends StatelessWidget {
               signUpText(),
               const SizedBox(height: 10),
               texts("Email"),
-              _entryField("Please enter your email", _mailController),
+              textFields("Please enter your email", _mailController),
               const SizedBox(height: 10),
               texts("Username"),
-              _entryField("Please enter your username", _userNameController),
+              textFields("Please enter your username", _userNameController),
               const SizedBox(height: 10),
               texts("Password"),
-              _entryField("Please enter your password", _passwordController),
+              textFields("Please enter your password", _passwordController),
               const SizedBox(height: 10),
               victimHelperCheckBox(),
               const SizedBox(height: 25),
@@ -39,28 +43,6 @@ class SignInPage extends StatelessWidget {
       ),
     );
   }
-}
-
-final TextEditingController _mailController = TextEditingController();
-final TextEditingController _userNameController = TextEditingController();
-final TextEditingController _passwordController = TextEditingController();
-
-Widget _entryField(String title, TextEditingController controller) {
-  return TextField(
-    controller: controller,
-    decoration: InputDecoration(labelText: title),
-  );
-}
-
-Future<void> signUserIn(context) async {
-  await AuthService().signIn(
-      mail: _mailController.text,
-      userName: _userNameController.text,
-      password: _passwordController.text);
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => LoginPage()),
-  );
 }
 
 Text signUpText() {
@@ -91,10 +73,11 @@ Padding texts(text) {
   );
 }
 
-Padding textFields(hintText) {
+Padding textFields(hintText, controllerType) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 25.0),
     child: TextField(
+      controller: controllerType,
       decoration: InputDecoration(
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
@@ -170,5 +153,16 @@ Row alreadyAMember(context) {
         },
       ),
     ],
+  );
+}
+
+Future<void> signUserIn(context) async {
+  await AuthService().signIn(
+      mail: _mailController.text,
+      userName: _userNameController.text,
+      password: _passwordController.text);
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => LoginPage()),
   );
 }
