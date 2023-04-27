@@ -121,6 +121,7 @@ class _HomePageState extends State<HomePage> {
 
                   // Map Integration
 
+                  // Map Integration
                   Container(
                     height: 450,
                     width: screenWidth,
@@ -128,37 +129,48 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: GoogleMap(
-                      initialCameraPosition: initialCameraPosition,
-                      markers: markers,
-                      mapType: MapType.normal,
-                      onMapCreated: (GoogleMapController controller) {
-                        mapController = controller;
-                      },
+                    child: Stack(
+                      children: [
+                        GoogleMap(
+                          initialCameraPosition: initialCameraPosition,
+                          markers: markers,
+                          mapType: MapType.normal,
+                          onMapCreated: (GoogleMapController controller) {
+                            mapController = controller;
+                          },
+                        ),
+                        Positioned(
+                          bottom: 20,
+                          left: 20,
+                          child: FloatingActionButton.extended(
+                              onPressed: () async {
+                                Position position =
+                                    await getUserCurrentLocation();
+                                mapController.animateCamera(
+                                  CameraUpdate.newCameraPosition(
+                                    CameraPosition(
+                                      target: LatLng(position.latitude,
+                                          position.longitude),
+                                      zoom: 15,
+                                    ),
+                                  ),
+                                );
+                                markers.clear();
+                                markers.add(Marker(
+                                    markerId:
+                                        const MarkerId("Current Location"),
+                                    position: LatLng(position.latitude,
+                                        position.longitude)));
+                                setState(() {});
+                              },
+                              label: Text('Locate me'),
+                              icon: Icon(Icons.location_searching),
+                              hoverColor: Colors.white,
+                              backgroundColor:
+                                  Color.fromRGBO(199, 0, 56, 0.89)),
+                        ),
+                      ],
                     ),
-                    /*
-                    floatingActionButton: FloatingActionButton.extended(
-                      onPressed: () async {
-                        Position position = await getUserCurrentLocation();
-                        mapController.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target:
-                                  LatLng(position.latitude, position.longitude),
-                              zoom: 15,
-                            ),
-                          ),
-                        );
-                        markers.clear();
-                        markers.add(Marker(
-                            markerId: const MarkerId("Current Location"),
-                            position:
-                                LatLng(position.latitude, position.longitude)));
-                        setState(() {});
-                      },
-                      icon: Icon(Icons.location_searching),
-                    ),
-                    */
                   ),
                 ],
               ),
