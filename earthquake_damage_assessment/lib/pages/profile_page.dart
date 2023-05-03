@@ -3,40 +3,77 @@ import 'package:flutter/material.dart';
 import 'dart:ffi';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-/*
+
+String biography = "Biography...";
+String location = "Location";
+String namesurname = "Name Surname";
+
 class Save2 {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
-  Future<Void?> save(
-      {required String namesurname,
-      required String location,
-      required String biography}) async {
+  Future<Map<String, String>> save() async {
     final currentUser = _firebaseAuth.currentUser;
     final docRef = _firestore.collection('UserTest').doc(currentUser?.uid);
     final docSnapshot = await docRef.get();
     final data = docSnapshot.data();
-    final mail = data?['mail'];
-    final password = data?['password'];
-    final username = data?['userName'];
-    if (data != null && data.containsKey('NameSurname')) {
-    } else {}
-    if (data != null && data.containsKey('Location')) {
-    } else {}
-    if (data != null && data.containsKey('Biography')) {
-    } else {}
-  }
-}*/
 
-class ProfilePage extends StatelessWidget {
-  ProfilePage({super.key});
+    String fetchedBiography = data?['Biography'] ?? "Biography...";
+    String fetchedLocation = data?['Location'] ?? "Location";
+    String fetchedNamesurname = data?['NameSurname'] ?? "Name Surname";
+
+    return {
+      'biography': fetchedBiography,
+      'location': fetchedLocation,
+      'namesurname': fetchedNamesurname,
+    };
+  }
+}
+
+class ProfilePage extends StatefulWidget {
+  ProfilePage({Key? key}) : super(key: key);
+
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final save2 = Save2();
+  late Future<Map<String, String>> fetchedData;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchedData = fetchData();
+  }
+
+  Future<Map<String, String>> fetchData() async {
+    Map<String, String> fetchedData = await save2.save();
+
+    namesurname = fetchedData['namesurname']!;
+    location = fetchedData['location']!;
+    biography = fetchedData['biography']!;
+
+    return fetchedData;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarButtons(context),
-      body: body(),
+      body: FutureBuilder<Map<String, String>>(
+        future: fetchedData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else {
+            return body(snapshot.data!);
+          }
+        },
+      ),
     );
   }
 }
@@ -63,7 +100,7 @@ AppBar appBarButtons(context) {
   );
 }
 
-ListView body() {
+ListView body(Map<String, String> data) {
   return ListView(
     physics: BouncingScrollPhysics(),
     children: [
@@ -71,12 +108,12 @@ ListView body() {
       SizedBox(
         height: 20,
       ),
-      nameText(),
-      locationText(),
+      nameText(data['namesurname']!),
+      locationText(data['location']!),
       SizedBox(
         height: 20,
       ),
-      biography_text(),
+      biography_text(data['biography']!),
       SizedBox(
         height: 20,
       ),
@@ -106,36 +143,38 @@ CircleAvatar profilePhoto() {
   );
 }
 
-Center nameText() {
+Center nameText(String namesurname) {
   return Center(
-      child: Text(
-    'Name Surname',
-    style: TextStyle(
-      color: Colors.black,
-      fontSize: 20,
+    child: Text(
+      namesurname,
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: 20,
+      ),
     ),
-  ));
+  );
 }
 
-Center locationText() {
+Center locationText(String location) {
   return Center(
-      child: Text(
-    'Location',
-    style: TextStyle(
-      color: Colors.black,
-      fontSize: 15,
+    child: Text(
+      location,
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: 15,
+      ),
     ),
-  ));
+  );
 }
 
-Padding biography_text() {
+Padding biography_text(String biography) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 25.0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          "Biography...",
+          biography,
           style: const TextStyle(
             color: Colors.black,
             fontSize: 16,
