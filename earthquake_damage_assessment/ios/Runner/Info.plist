@@ -7,6 +7,10 @@
     	<key>NSAllowsLocalNetworking</key>
     	<true/>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location is required to show nearby safe locations and create requests.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is required to show nearby safe locations and create requests when in the background.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
