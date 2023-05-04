@@ -1,27 +1,27 @@
-import 'package:earthquake_damage_assessment/pages/home_page_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import "profile_page.dart";
+import "admin_request_page.dart";
 import 'package:geolocator/geolocator.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class AdminPage extends StatefulWidget {
+  const AdminPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<AdminPage> createState() => _AdminPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AdminPageState extends State<AdminPage> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
+        MaterialPageRoute(builder: (context) => AdminRequestPage()),
       );
     }
   }
@@ -73,8 +73,8 @@ class _HomePageState extends State<HomePage> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
+              icon: Icon(Icons.report),
+              label: 'Requests',
             ),
           ],
           currentIndex: _selectedIndex,
@@ -84,44 +84,28 @@ class _HomePageState extends State<HomePage> {
         body: SafeArea(
           child: Column(children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: Column(
                 children: [
                   // AppName
                   Row(
                     children: [
                       Text(
-                        "KuHelp",
+                        "KuHelp - Admin Page",
                         style: TextStyle(
                           color: Color.fromRGBO(199, 0, 56, 0.89),
-                          fontSize: 30,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                         ),
                       )
                     ],
                   ),
 
-                  SizedBox(height: 20),
-
-                  // search bar
-                  TextField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      hintText: "Search for Safe Location",
-                      prefixIcon: Icon(Icons.search),
-                      prefixIconColor: Colors.grey[600],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 5),
 
                   // Map Integration
                   Container(
-                    height: 450,
+                    height: 745,
                     width: screenWidth,
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
@@ -173,55 +157,6 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(20),
-                color: Colors.grey[200],
-                child: Center(
-                  child: Column(children: [
-                    //Heading
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Request Help",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-
-                    //List of buttons
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          HomePageButton(
-                            text: "INJURED",
-                          ),
-                          HomePageButton(
-                            text: "LOST",
-                          ),
-                          HomePageButton(
-                            text: "LOST RELATIVE",
-                          ),
-                          HomePageButton(
-                            text: "UNDER THE DEBRIS",
-                          ),
-                          HomePageButton(
-                            text: "REQUEST RESOURCE",
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]),
-                ),
-              ),
-            )
           ]),
         ));
   }
