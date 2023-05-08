@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import "admin_request_page.dart";
 import 'package:geolocator/geolocator.dart';
+import 'request_table.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
@@ -21,7 +22,7 @@ class _AdminPageState extends State<AdminPage> {
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AdminRequestPage()),
+        MaterialPageRoute(builder: (context) => RequestTable()),
       );
     }
   }
