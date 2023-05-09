@@ -1,6 +1,7 @@
 import 'package:earthquake_damage_assessment/pages/home_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
 import 'home_page.dart';
@@ -85,6 +86,10 @@ Padding textFields(hintText, controllerType) {
         filled: true,
         hintText: hintText,
       ),
+      obscureText: hintText == "Please enter your password" ? true : false,
+      enableSuggestions:
+          hintText == "Please enter your password" ? false : true,
+      autocorrect: hintText == "Please enter your password" ? false : true,
     ),
   );
 }
@@ -170,6 +175,8 @@ Row notAMember(context) {
 Future<void> login(context) async {
   await AuthService()
       .logIn(mail: _mailController.text, password: _passwordController.text);
+  _mailController.clear();
+  _passwordController.clear();
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => const HomePage()),

@@ -1,8 +1,12 @@
 import 'package:earthquake_damage_assessment/pages/editing_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:ffi';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../service/auth.dart';
+import 'login_page.dart';
 
 String biography = "Biography...";
 String location = "Location";
@@ -61,6 +65,13 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          logout(context);
+        },
+        child: Icon(Icons.logout_outlined),
+        backgroundColor: Color.fromRGBO(199, 0, 56, 0.89),
+      ),
       appBar: appBarButtons(context),
       body: FutureBuilder<Map<String, String>>(
         future: fetchedData,
@@ -201,5 +212,13 @@ Container requests() {
       Text("Request 1 - (Request Type)"),
       Text("Adress"),
     ]),
+  );
+}
+
+Future<void> logout(context) async {
+  await AuthService().signOut();
+  Navigator.of(context).pushAndRemoveUntil(
+    CupertinoPageRoute(builder: (context) => LoginPage()),
+    (_) => false,
   );
 }

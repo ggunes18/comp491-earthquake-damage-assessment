@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'profile_page.dart';
-import 'package:earthquake_damage_assessment/pages/first_page.dart';
-import 'package:flutter/material.dart';
 import 'package:earthquake_damage_assessment/service/edituser.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'login_page.dart';
-import 'home_page.dart';
 
 class EditingPage extends StatelessWidget {
   EditingPage({super.key});
@@ -22,14 +17,13 @@ class EditingPage extends StatelessWidget {
               editText(),
               const SizedBox(height: 10),
               texts("Name and Surname"),
-              _entryField(
-                  "Please enter your name and surname", _nameController),
+              textFields("Please enter your name and surname", _nameController),
               const SizedBox(height: 10),
               texts("Location"),
-              _entryField("Please enter your location", _locationController),
+              textFields("Please enter your location", _locationController),
               const SizedBox(height: 10),
               texts("Biography"),
-              _entryField("Please enter your biography", _biographyController),
+              textFields("Please enter your biography", _biographyController),
               const SizedBox(height: 25),
               submitButton(context, _nameController, _locationController,
                   _biographyController),
@@ -44,13 +38,6 @@ class EditingPage extends StatelessWidget {
 final TextEditingController _nameController = TextEditingController();
 final TextEditingController _locationController = TextEditingController();
 final TextEditingController _biographyController = TextEditingController();
-
-Widget _entryField(String title, TextEditingController controller) {
-  return TextField(
-    controller: controller,
-    decoration: InputDecoration(labelText: title),
-  );
-}
 
 Text editText() {
   return const Text(
@@ -80,10 +67,11 @@ Padding texts(text) {
   );
 }
 
-Padding textFields(hintText) {
+Padding textFields(hintText, controllerType) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 25.0),
     child: TextField(
+      controller: controllerType,
       decoration: InputDecoration(
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
@@ -135,7 +123,7 @@ TextButton submitButton(
           borderRadius: BorderRadius.circular(50),
           color: Color.fromRGBO(199, 0, 56, 0.89)),
       child: const Center(
-        child: Text("Login",
+        child: Text("Save",
             style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
       ),
     ),

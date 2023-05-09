@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Profile',
             ),
           ],
-          currentIndex: _selectedIndex,
+          currentIndex: 0,
           selectedItemColor: Color.fromRGBO(199, 0, 56, 0.89),
           onTap: _onItemTapped,
         ),
