@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'home_page.dart';
+import 'package:earthquake_damage_assessment/pages/home_page.dart';
 
 final TextEditingController _nameController = TextEditingController();
-final TextEditingController _locationController = TextEditingController();
+//final TextEditingController _locationController = TextEditingController();
 final TextEditingController _needsController = TextEditingController();
 final TextEditingController _infoController = TextEditingController();
 double emergencyLevel = 0;
@@ -41,10 +42,10 @@ class RequestPage extends StatelessWidget {
               const SizedBox(height: 10),
               texts("Your Name"),
               textFields("Enter your name.", _nameController),
-              const SizedBox(height: 10),
-              texts("Location"),
-              textFields(
-                  "Enter the location to send help.", _locationController),
+         //     const SizedBox(height: 10),
+         //     texts("Location"),
+         //     textFields("Enter the location to send help.",
+         //        _locationController),
               const SizedBox(height: 10),
               texts("Needs"),
               textFields(
@@ -141,7 +142,7 @@ TextButton submitButton(context, requestType) {
       Get.defaultDialog(
           title: "Are your sure about request information?",
           middleText:
-              "Your name: ${_nameController.text}\n Your location: ${_locationController.text}\n Your needs: ${_needsController.text}\n Extra information: ${_infoController.text}\n Emergency level: $emergencyLevel\n",
+              "Your name: ${_nameController.text}\n Your location: ${globalLatitude.toString()}, ${globalLongitude.toString()}\n Your needs: ${_needsController.text}\n Extra information: ${_infoController.text}\n Emergency level: $emergencyLevel\n",
           textConfirm: "Yes",
           textCancel: "Edit request",
           onConfirm: () {
@@ -167,7 +168,7 @@ Future<void> addRequest(context, requestType) async {
   await FirebaseFirestore.instance.collection("RequestTest").add({
     "type": requestType,
     "name": _nameController.text,
-    "location": _locationController.text,
+    "location": "${globalLatitude.toString()}, ${globalLongitude.toString()}",
     "need": _needsController.text,
     "info": _infoController.text,
     "emergency": emergencyLevel
@@ -178,7 +179,7 @@ Future<void> addRequest(context, requestType) async {
     textConfirm: "OK",
     onConfirm: () {
       _nameController.text = "";
-      _locationController.text = "";
+   //   _locationController.text = "";
       _needsController.text = "";
       _infoController.text = "";
       emergencyLevel = 0;
