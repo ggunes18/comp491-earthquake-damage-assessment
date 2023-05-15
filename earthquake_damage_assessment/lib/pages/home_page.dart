@@ -4,6 +4,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import "profile_page.dart";
 import 'package:geolocator/geolocator.dart';
 
+double globalLatitude = 0.0;
+double globalLongitude = 0.0;
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -58,6 +61,8 @@ class _HomePageState extends State<HomePage> {
     }
 
     Position position = await Geolocator.getCurrentPosition();
+    globalLatitude = position.latitude;
+    globalLongitude = position.longitude;
     return position;
   }
 
