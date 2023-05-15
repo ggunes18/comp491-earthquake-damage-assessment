@@ -1,3 +1,4 @@
+import 'package:earthquake_damage_assessment/pages/admin_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       //home: RequestTable(),
-      home: FirstPage(),
+      //home: FirstPage(),
+      home: AdminPage(),
     );
   }
 }

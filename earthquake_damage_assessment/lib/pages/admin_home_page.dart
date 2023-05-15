@@ -92,10 +92,10 @@ class _AdminPageState extends State<AdminPage> {
                   Row(
                     children: [
                       Text(
-                        "KuHelp - Admin Page",
+                        "KuHelp",
                         style: TextStyle(
                           color: Color.fromRGBO(199, 0, 56, 0.89),
-                          fontSize: 28,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold,
                         ),
                       )
@@ -106,7 +106,7 @@ class _AdminPageState extends State<AdminPage> {
 
                   // Map Integration
                   Container(
-                    height: 745,
+                    height: 735,
                     width: screenWidth,
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
