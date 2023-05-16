@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:ffi';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'home_page.dart';
 
 import '../service/auth.dart';
 import 'login_page.dart';
@@ -45,6 +46,19 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final save2 = Save2();
   late Future<Map<String, String>> fetchedData;
+  int _selectedIndex = 1;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    if (index == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -73,6 +87,21 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Color.fromRGBO(199, 0, 56, 0.89),
       ),
       appBar: appBarButtons(context),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: 0,
+        selectedItemColor: Color.fromRGBO(199, 0, 56, 0.89),
+        onTap: _onItemTapped,
+      ),
       body: FutureBuilder<Map<String, String>>(
         future: fetchedData,
         builder: (context, snapshot) {
@@ -124,11 +153,12 @@ ListView body(Map<String, String> data) {
       SizedBox(
         height: 20,
       ),
-      biography_text(data['biography']!),
+      //biography_text(data['biography']!),
       SizedBox(
         height: 20,
       ),
-      iconButtons(),
+      generalInfoPhoneMail("phoneNum", "mail"),
+      generalInfoBloodSeconPerson("bloodType", "secondPerson"),
       SizedBox(
         height: 20,
       ),
@@ -196,12 +226,56 @@ Padding biography_text(String biography) {
   );
 }
 
-Row iconButtons() {
+Row generalInfoPhoneMail(phoneNum, mail) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      IconButton(onPressed: () {}, icon: Icon(Icons.local_phone)),
-      IconButton(onPressed: () {}, icon: Icon(Icons.mail)),
+      Icon(Icons.local_phone),
+      Text(
+        phoneNum,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+        ),
+      ),
+      SizedBox(
+        width: 20,
+      ),
+      Icon(Icons.mail),
+      Text(
+        mail,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+        ),
+      ),
+    ],
+  );
+}
+
+Row generalInfoBloodSeconPerson(bloodType, secondPerson) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(Icons.bloodtype),
+      Text(
+        bloodType,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+        ),
+      ),
+      SizedBox(
+        width: 20,
+      ),
+      Icon(Icons.account_box_rounded),
+      Text(
+        secondPerson,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+        ),
+      ),
     ],
   );
 }

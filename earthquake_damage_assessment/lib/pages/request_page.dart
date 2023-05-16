@@ -42,14 +42,21 @@ class RequestPage extends StatelessWidget {
               const SizedBox(height: 10),
               texts("Your Name"),
               textFields("Enter your name.", _nameController),
-         //     const SizedBox(height: 10),
-         //     texts("Location"),
-         //     textFields("Enter the location to send help.",
-         //        _locationController),
+              //     const SizedBox(height: 10),
+              //     texts("Location"),
+              //     textFields("Enter the location to send help.",
+              //        _locationController),
               const SizedBox(height: 10),
               texts("Needs"),
               textFields(
                   "If you need anything write it here.", _needsController),
+              const SizedBox(height: 10),
+              texts("Directions"),
+              textFields("Enter the directions", _needsController),
+              const SizedBox(height: 10),
+              texts("Second person to be reached"),
+              textFields("Second person to be reached in an emergency",
+                  _needsController),
               const SizedBox(height: 10),
               texts("Extra Information"),
               textFields(
@@ -179,7 +186,7 @@ Future<void> addRequest(context, requestType) async {
     textConfirm: "OK",
     onConfirm: () {
       _nameController.text = "";
-   //   _locationController.text = "";
+      //   _locationController.text = "";
       _needsController.text = "";
       _infoController.text = "";
       emergencyLevel = 0;
