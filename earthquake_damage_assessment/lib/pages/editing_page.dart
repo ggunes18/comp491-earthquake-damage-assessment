@@ -8,6 +8,7 @@ class EditingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBarButtons(context),
       body: SafeArea(
         child: Center(
           child: Column(
@@ -22,9 +23,22 @@ class EditingPage extends StatelessWidget {
               texts("Location"),
               textFields("Please enter your location", _locationController),
               const SizedBox(height: 10),
-              texts("Biography"),
-              textFields("Please enter your biography", _biographyController),
-              const SizedBox(height: 25),
+              texts("Phone Number"),
+              textFields("Please enter your phone number", _nameController),
+              const SizedBox(height: 10),
+              texts("Mail"),
+              textFields("Please enter your mail", _nameController),
+              const SizedBox(height: 10),
+              texts("Blood Type"),
+              textFields("Please enter your blood type", _nameController),
+              const SizedBox(height: 10),
+              texts("Second Person"),
+              textFields("Please enter the second person to be reached",
+                  _nameController),
+              const SizedBox(height: 10),
+              //texts("Biography"),
+              //textFields("Please enter your biography", _biographyController),
+              //const SizedBox(height: 25),
               submitButton(context, _nameController, _locationController,
                   _biographyController),
             ],
@@ -46,6 +60,16 @@ Text editText() {
       color: Color.fromRGBO(199, 0, 56, 0.89),
       fontSize: 20,
     ),
+  );
+}
+
+AppBar appBarButtons(context) {
+  return AppBar(
+    leading: BackButton(
+      color: Colors.black,
+    ),
+    backgroundColor: Colors.transparent,
+    elevation: 0,
   );
 }
 
