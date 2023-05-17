@@ -1,9 +1,13 @@
 import 'package:earthquake_damage_assessment/pages/editing_page.dart';
+import 'package:earthquake_damage_assessment/pages/request_page.dart';
+import 'package:earthquake_damage_assessment/pages/request_table.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'admin_home_page.dart';
 import 'home_page.dart';
+
 import '../service/auth.dart';
 import 'login_page.dart';
 
@@ -33,26 +37,33 @@ class Save2 {
   }
 }
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class AdminProfilePage extends StatefulWidget {
+  const AdminProfilePage({Key? key}) : super(key: key);
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _AdminProfilePageState createState() => _AdminProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _AdminProfilePageState extends State<AdminProfilePage> {
   final save2 = Save2();
   late Future<Map<String, String>> fetchedData;
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const RequestTable()),
+      );
+    }
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminPage()),
       );
     }
   }
@@ -85,6 +96,10 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: appBarButtons(context),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.report),
+            label: 'Requests',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',

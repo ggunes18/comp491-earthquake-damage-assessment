@@ -16,7 +16,7 @@ class FirstPage extends StatelessWidget {
             children: [
               Container(
                 height: height * 0.5,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage("assets/images/kuhelp.png"),
                     //fit: BoxFit.cover,
@@ -64,7 +64,7 @@ Padding explanationText() {
       children: [
         Container(
           width: 360,
-          child: Text(
+          child: const Text(
             'Bridging the communication gap between earthquake victims and aid groups. ',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -83,7 +83,7 @@ TextButton signInButton(context) {
     onPressed: () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SignInPage()),
+        MaterialPageRoute(builder: (context) => const SignInPage()),
       );
     },
     child: Container(
@@ -92,7 +92,7 @@ TextButton signInButton(context) {
       margin: const EdgeInsets.symmetric(horizontal: 60),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: Color.fromRGBO(199, 0, 56, 0.89)),
+          color: const Color.fromRGBO(199, 0, 56, 0.89)),
       child: const Center(
         child: Text("Sign In",
             style: TextStyle(
@@ -124,7 +124,7 @@ Column alreadyAUser(context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
+            MaterialPageRoute(builder: (context) => const LoginPage()),
           );
         },
       ),

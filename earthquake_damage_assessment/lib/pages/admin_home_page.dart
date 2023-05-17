@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import "admin_request_page.dart";
 import 'package:geolocator/geolocator.dart';
+import 'admin_profile_page.dart';
 import 'request_table.dart';
 
 class AdminPage extends StatefulWidget {
@@ -12,17 +12,23 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
-    if (index == 1) {
+    if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RequestTable()),
+        MaterialPageRoute(builder: (context) => const RequestTable()),
+      );
+    }
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminProfilePage()),
       );
     }
   }
@@ -70,16 +76,20 @@ class _AdminPageState extends State<AdminPage> {
         bottomNavigationBar: BottomNavigationBar(
           items: const [
             BottomNavigationBarItem(
+              icon: Icon(Icons.report),
+              label: 'Requests',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.report),
-              label: 'Requests',
+              icon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Color.fromRGBO(199, 0, 56, 0.89),
+          selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
           onTap: _onItemTapped,
         ),
         body: SafeArea(
@@ -90,7 +100,7 @@ class _AdminPageState extends State<AdminPage> {
                 children: [
                   // AppName
                   Row(
-                    children: [
+                    children: const [
                       Text(
                         "KuHelp",
                         style: TextStyle(
@@ -102,7 +112,7 @@ class _AdminPageState extends State<AdminPage> {
                     ],
                   ),
 
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
 
                   // Map Integration
                   Container(
@@ -146,11 +156,11 @@ class _AdminPageState extends State<AdminPage> {
                                         position.longitude)));
                                 setState(() {});
                               },
-                              label: Text('Locate me'),
-                              icon: Icon(Icons.location_searching),
+                              label: const Text('Locate me'),
+                              icon: const Icon(Icons.location_searching),
                               hoverColor: Colors.white,
                               backgroundColor:
-                                  Color.fromRGBO(199, 0, 56, 0.89)),
+                                  const Color.fromRGBO(199, 0, 56, 0.89)),
                         ),
                       ],
                     ),

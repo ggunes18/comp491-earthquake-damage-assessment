@@ -1,16 +1,14 @@
 import 'package:earthquake_damage_assessment/pages/home_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'sign_in_page.dart';
-import 'home_page.dart';
 
 final TextEditingController _mailController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
 
 class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +21,13 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 50),
               loginText(),
               const SizedBox(height: 10),
-              texts("Email or Username"),
-              textFields(
-                  "Please enter your email or username", _mailController),
+              texts("Email"),
+              textFields("Please enter your email", _mailController),
               const SizedBox(height: 10),
               texts("Password"),
               const SizedBox(height: 10),
               textFields("Please enter your password", _passwordController),
               const SizedBox(height: 10),
-              remeberMeCheck(),
               forgotPassword(),
               const SizedBox(height: 25),
               loginButton(context),
@@ -94,19 +90,6 @@ Padding textFields(hintText, controllerType) {
   );
 }
 
-Padding remeberMeCheck() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: const [
-        Checkbox(value: false, onChanged: null),
-        Text("Remember me", style: TextStyle(fontSize: 11)),
-      ],
-    ),
-  );
-}
-
 Padding forgotPassword() {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -133,7 +116,7 @@ TextButton loginButton(context) {
       margin: const EdgeInsets.symmetric(horizontal: 60),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: Color.fromRGBO(199, 0, 56, 0.89)),
+          color: const Color.fromRGBO(199, 0, 56, 0.89)),
       child: const Center(
         child: Text("Login",
             style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
@@ -164,7 +147,7 @@ Row notAMember(context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => SignInPage()),
+            MaterialPageRoute(builder: (context) => const SignInPage()),
           );
         },
       ),
@@ -172,13 +155,37 @@ Row notAMember(context) {
   );
 }
 
+void showInvalidLoginDialog(BuildContext context, String errorText) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Invalid Login'),
+        content: Text(errorText),
+        actions: [
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 Future<void> login(context) async {
   await AuthService()
-      .logIn(mail: _mailController.text, password: _passwordController.text);
-  _mailController.clear();
-  _passwordController.clear();
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => const HomePage()),
-  );
+      .logIn(mail: _mailController.text, password: _passwordController.text)
+      .then((uid) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+    _mailController.clear();
+    _passwordController.clear();
+  }).catchError((e) {
+    showInvalidSigninDialog(context, e.message);
+  });
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RequestInformationPage extends StatelessWidget {
-  RequestInformationPage({super.key});
+  const RequestInformationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class RequestInformationPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: Row(
-                children: [
+                children: const [
                   Text(
                     "Request Information Page",
                     style: TextStyle(
@@ -50,7 +50,7 @@ class RequestInformationPage extends StatelessWidget {
 Text titleText(title) {
   return Text(
     title,
-    style: TextStyle(
+    style: const TextStyle(
       color: Color.fromRGBO(199, 0, 56, 0.89),
       fontSize: 20,
     ),
@@ -60,7 +60,7 @@ Text titleText(title) {
 Text texts(input) {
   return Text(
     input,
-    style: TextStyle(
+    style: const TextStyle(
       color: Colors.black,
       fontSize: 15,
     ),
@@ -69,7 +69,7 @@ Text texts(input) {
 
 AppBar appBarButtons(context) {
   return AppBar(
-    leading: BackButton(
+    leading: const BackButton(
       color: Colors.black,
     ),
     backgroundColor: Colors.transparent,

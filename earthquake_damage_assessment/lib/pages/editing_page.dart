@@ -3,7 +3,7 @@ import 'profile_page.dart';
 import 'package:earthquake_damage_assessment/service/edituser.dart';
 
 class EditingPage extends StatelessWidget {
-  EditingPage({super.key});
+  const EditingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ Text editText() {
 
 AppBar appBarButtons(context) {
   return AppBar(
-    leading: BackButton(
+    leading: const BackButton(
       color: Colors.black,
     ),
     backgroundColor: Colors.transparent,
@@ -114,7 +114,6 @@ Future<void> savecredentials(
   TextEditingController locationController,
   TextEditingController biographyController,
 ) async {
-  //NEW CODE
   await SaveService().save(
       namesurname: _nameController.text,
       location: _locationController.text,
@@ -133,10 +132,10 @@ TextButton submitButton(
         nameController,
         locationController,
         biographyController,
-      ); //NEW CODE
+      );
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
       );
     },
     child: Container(
@@ -145,7 +144,7 @@ TextButton submitButton(
       margin: const EdgeInsets.symmetric(horizontal: 60),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: Color.fromRGBO(199, 0, 56, 0.89)),
+          color: const Color.fromRGBO(199, 0, 56, 0.89)),
       child: const Center(
         child: Text("Save",
             style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
