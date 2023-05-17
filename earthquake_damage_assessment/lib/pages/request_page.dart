@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'home_page.dart';
-import 'package:earthquake_damage_assessment/pages/home_page.dart';
 
 final TextEditingController _nameController = TextEditingController();
 //final TextEditingController _locationController = TextEditingController();
@@ -14,7 +13,7 @@ double emergencyLevel = 0;
 class RequestPage extends StatelessWidget {
   final String requestType;
 
-  RequestPage({super.key, required this.requestType});
+  const RequestPage({super.key, required this.requestType});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class RequestPage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => const HomePage()),
             );
           },
         ),
@@ -42,10 +41,6 @@ class RequestPage extends StatelessWidget {
               const SizedBox(height: 10),
               texts("Your Name"),
               textFields("Enter your name.", _nameController),
-              //     const SizedBox(height: 10),
-              //     texts("Location"),
-              //     textFields("Enter the location to send help.",
-              //        _locationController),
               const SizedBox(height: 10),
               texts("Needs"),
               textFields(
@@ -76,10 +71,10 @@ class RequestPage extends StatelessWidget {
   }
 }
 
-Text requestText(request_text) {
+Text requestText(requestText) {
   return Text(
-    request_text,
-    style: TextStyle(
+    requestText,
+    style: const TextStyle(
       color: Color.fromRGBO(199, 0, 56, 0.89),
       fontSize: 30,
     ),
@@ -128,17 +123,16 @@ RatingBar ratingBar() {
     allowHalfRating: false,
     itemCount: 5,
     ratingWidget: RatingWidget(
-      full: Icon(
+      full: const Icon(
         Icons.circle_rounded,
         color: Color.fromRGBO(199, 0, 56, 0.89),
       ),
-      half: Icon(Icons.circle_rounded),
-      empty: Icon(Icons.circle_outlined),
+      half: const Icon(Icons.circle_rounded),
+      empty: const Icon(Icons.circle_outlined),
     ),
-    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
     onRatingUpdate: (rating) {
       emergencyLevel = rating;
-      print(rating);
     },
   );
 }
@@ -162,7 +156,7 @@ TextButton submitButton(context, requestType) {
       margin: const EdgeInsets.symmetric(horizontal: 60),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: Color.fromRGBO(199, 0, 56, 0.89)),
+          color: const Color.fromRGBO(199, 0, 56, 0.89)),
       child: const Center(
         child: Text("Submit",
             style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
@@ -186,13 +180,12 @@ Future<void> addRequest(context, requestType) async {
     textConfirm: "OK",
     onConfirm: () {
       _nameController.text = "";
-      //   _locationController.text = "";
       _needsController.text = "";
       _infoController.text = "";
       emergencyLevel = 0;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     },
   );

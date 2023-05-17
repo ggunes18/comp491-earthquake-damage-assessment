@@ -1,4 +1,4 @@
-import 'package:earthquake_damage_assessment/pages/admin_request_page.dart';
+import 'package:earthquake_damage_assessment/pages/admin_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'admin_home_page.dart';
 
@@ -16,10 +16,16 @@ class _RequestTableState extends State<RequestTable> {
     setState(() {
       _selectedIndex = index;
     });
-    if (index == 0) {
+    if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AdminPage()),
+        MaterialPageRoute(builder: (context) => const AdminPage()),
+      );
+    }
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminProfilePage()),
       );
     }
   }
@@ -31,16 +37,20 @@ class _RequestTableState extends State<RequestTable> {
         bottomNavigationBar: BottomNavigationBar(
           items: const [
             BottomNavigationBarItem(
+              icon: Icon(Icons.report),
+              label: 'Requests',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.report),
-              label: 'Requests',
+              icon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Color.fromRGBO(199, 0, 56, 0.89),
+          selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
           onTap: _onItemTapped,
         ),
         body: SafeArea(
@@ -51,7 +61,7 @@ class _RequestTableState extends State<RequestTable> {
                   child: Column(
                     children: [
                       Row(
-                        children: [
+                        children: const [
                           Text(
                             "KuHelp - Request Page",
                             style: TextStyle(
@@ -63,22 +73,22 @@ class _RequestTableState extends State<RequestTable> {
                         ],
                       ),
                       Container(
-                        child: DataTable(showCheckboxColumn: false, columns: [
-                          DataColumn(label: Text('Type')),
-                          DataColumn(label: Text('Place')),
-                          DataColumn(label: Text('Urgeny')),
-                        ], rows: [
-                          DataRow(
-                            cells: [
-                              DataCell(Text('Name')),
-                              DataCell(Text('Place1')),
-                              DataCell(Text('Urgency Level')),
+                        child: DataTable(
+                            showCheckboxColumn: false,
+                            columns: const [
+                              DataColumn(label: Text('Type')),
+                              DataColumn(label: Text('Place')),
+                              DataColumn(label: Text('Urgeny')),
                             ],
-                            onSelectChanged: (newValue) {
-                              print('row 1 pressed');
-                            },
-                          ),
-                        ]),
+                            rows: const [
+                              DataRow(
+                                cells: [
+                                  DataCell(Text('Name')),
+                                  DataCell(Text('Place1')),
+                                  DataCell(Text('Urgency Level')),
+                                ],
+                              ),
+                            ]),
                       )
                     ],
                   ))

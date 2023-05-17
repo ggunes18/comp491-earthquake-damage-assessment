@@ -1,16 +1,20 @@
-import 'package:earthquake_damage_assessment/pages/first_page.dart';
+import 'package:earthquake_damage_assessment/pages/home_page.dart';
+import 'package:earthquake_damage_assessment/pages/victim_helper_checbox.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'login_page.dart';
-import 'home_page.dart';
 
 final TextEditingController _mailController = TextEditingController();
 final TextEditingController _userNameController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
+final TextEditingController _passwordControllerSecond = TextEditingController();
+
+final VictimHelperCheckBoxes _checkBoxes = VictimHelperCheckBoxes();
 
 class SignInPage extends StatelessWidget {
-  SignInPage({super.key});
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +35,11 @@ class SignInPage extends StatelessWidget {
               const SizedBox(height: 10),
               texts("Password"),
               textFields("Please enter your password", _passwordController),
+              texts("Password"),
+              textFields("Please enter your password again",
+                  _passwordControllerSecond),
               const SizedBox(height: 10),
-              victimHelperCheckBox(),
+              VictimHelperCheckBoxes(),
               const SizedBox(height: 25),
               signInButton(context),
               const SizedBox(height: 50),
@@ -86,22 +93,18 @@ Padding textFields(hintText, controllerType) {
         filled: true,
         hintText: hintText,
       ),
-    ),
-  );
-}
-
-Padding victimHelperCheckBox() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: const [
-        Checkbox(value: false, onChanged: null),
-        Text("Victim", style: TextStyle(fontSize: 11)),
-        SizedBox(width: 10),
-        Checkbox(value: false, onChanged: null),
-        Text("Helper", style: TextStyle(fontSize: 11)),
-      ],
+      obscureText: hintText == "Please enter your password" ||
+              hintText == "Please enter your password again"
+          ? true
+          : false,
+      enableSuggestions: hintText == "Please enter your password" ||
+              hintText == "Please enter your password again"
+          ? false
+          : true,
+      autocorrect: hintText == "Please enter your password" ||
+              hintText == "Please enter your password again"
+          ? false
+          : true,
     ),
   );
 }
@@ -117,7 +120,7 @@ TextButton signInButton(context) {
       margin: const EdgeInsets.symmetric(horizontal: 60),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: Color.fromRGBO(199, 0, 56, 0.89)),
+          color: const Color.fromRGBO(199, 0, 56, 0.89)),
       child: const Center(
         child: Text("Sign In",
             style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
@@ -148,7 +151,7 @@ Row alreadyAMember(context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
+            MaterialPageRoute(builder: (context) => const LoginPage()),
           );
         },
       ),
@@ -156,13 +159,44 @@ Row alreadyAMember(context) {
   );
 }
 
-Future<void> signUserIn(context) async {
-  await AuthService().signIn(
-      mail: _mailController.text,
-      userName: _userNameController.text,
-      password: _passwordController.text);
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => LoginPage()),
+void showInvalidSigninDialog(BuildContext context, String errorText) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Invalid Signin'),
+        content: Text(errorText),
+        actions: [
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
   );
+}
+
+Future<void> signUserIn(context) async {
+  if (_passwordController.text == _passwordControllerSecond.text) {
+    await AuthService()
+        .signIn(
+            mail: _mailController.text,
+            userName: _userNameController.text,
+            password: _passwordController.text,
+            isVictim: _checkBoxes.isVictimSelected,
+            isHelper: _checkBoxes.isHelperSelected)
+        .then((uid) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    }).catchError((e) {
+      showInvalidSigninDialog(context, e.message);
+    });
+  } else {
+    showInvalidSigninDialog(context, "Please make sure your passwords match!");
+  }
 }
