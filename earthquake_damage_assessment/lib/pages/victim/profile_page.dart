@@ -21,12 +21,11 @@ class Save2 {
     final docSnapshot = await docRef.get();
     final data = docSnapshot.data();
 
-    String fetchedBiography = data?['Biography'] ?? "Biography...";
     String fetchedLocation = data?['Location'] ?? "Location";
     String fetchedNamesurname = data?['NameSurname'] ?? "Name Surname";
+    String fetchedUsername = data?['userName'] ?? "User Name";
 
     return {
-      'biography': fetchedBiography,
       'location': fetchedLocation,
       'namesurname': fetchedNamesurname,
     };
@@ -94,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
             label: 'Profile',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: 1,
         selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
         onTap: _onItemTapped,
       ),
@@ -140,7 +139,7 @@ ListView body(Map<String, String> data) {
   return ListView(
     physics: const BouncingScrollPhysics(),
     children: [
-      profilePhoto(),
+      profilePhoto(data['namesurname']!),
       const SizedBox(
         height: 20,
       ),
@@ -149,7 +148,6 @@ ListView body(Map<String, String> data) {
       const SizedBox(
         height: 20,
       ),
-      //biography_text(data['biography']!),
       const SizedBox(
         height: 20,
       ),
@@ -173,10 +171,20 @@ ListView body(Map<String, String> data) {
   );
 }
 
-CircleAvatar profilePhoto() {
-  return const CircleAvatar(
-    //backgroundImage: AssetImage("assets/images/profile_picture.png"),
+CircleAvatar profilePhoto(String username) {
+  String initials =
+      username.isNotEmpty == true ? username[0].toUpperCase() : '';
+  return CircleAvatar(
+    backgroundColor: const Color.fromRGBO(
+        199, 0, 56, 0.89), // Set the background color of the avatar
     radius: 120,
+    child: Text(
+      initials,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 60,
+      ),
+    ),
   );
 }
 

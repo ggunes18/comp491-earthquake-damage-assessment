@@ -106,7 +106,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
             label: 'Profile',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: 2,
         selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
         onTap: _onItemTapped,
       ),
