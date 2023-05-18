@@ -49,7 +49,7 @@ class _RequestTablePageState extends State<RequestTablePage> {
               label: 'Profile',
             ),
           ],
-          currentIndex: _selectedIndex,
+          currentIndex: 0,
           selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
           onTap: _onItemTapped,
         ),
