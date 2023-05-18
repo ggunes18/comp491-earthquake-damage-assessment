@@ -35,4 +35,13 @@ class AuthService {
       "isHelper": isHelper
     });
   }
+
+  Future<String> resetPassword({required String email}) async {
+    var status = "";
+    await _firebaseAuth
+        .sendPasswordResetEmail(email: email)
+        .then((value) => status = "success")
+        .catchError((e) => status = e.message);
+    return status;
+  }
 }

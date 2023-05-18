@@ -1,18 +1,16 @@
-import 'package:earthquake_damage_assessment/pages/common/forgot_password_page.dart';
-import 'package:earthquake_damage_assessment/pages/victim/home_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
 import 'package:flutter/material.dart';
+import 'login_page.dart';
 import 'sign_in_page.dart';
 
 final TextEditingController _mailController = TextEditingController();
-final TextEditingController _passwordController = TextEditingController();
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
+class ForgotPasswordPage extends StatelessWidget {
+  const ForgotPasswordPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBarButtons(context),
       body: SafeArea(
         child: Center(
           child: Column(
@@ -22,17 +20,11 @@ class LoginPage extends StatelessWidget {
               loginText(),
               const SizedBox(height: 10),
               texts("Email"),
-              textFields("Please enter your email", _mailController),
+              textFields("Please enter your email to reset your password",
+                  _mailController),
               const SizedBox(height: 10),
-              texts("Password"),
-              const SizedBox(height: 10),
-              textFields("Please enter your password", _passwordController),
-              const SizedBox(height: 10),
-              forgotPassword(context),
               const SizedBox(height: 25),
-              loginButton(context),
-              const SizedBox(height: 50),
-              notAMember(context),
+              resetButton(context),
             ],
           ),
         ),
@@ -43,10 +35,10 @@ class LoginPage extends StatelessWidget {
 
 Text loginText() {
   return const Text(
-    'LOGIN',
+    'Forgot Password',
     style: TextStyle(
       color: Color.fromRGBO(199, 0, 56, 0.89),
-      fontSize: 30,
+      fontSize: 25,
     ),
   );
 }
@@ -82,58 +74,6 @@ Padding textFields(hintText, controllerType) {
         filled: true,
         hintText: hintText,
       ),
-      obscureText: hintText == "Please enter your password" ? true : false,
-      enableSuggestions:
-          hintText == "Please enter your password" ? false : true,
-      autocorrect: hintText == "Please enter your password" ? false : true,
-    ),
-  );
-}
-
-Padding forgotPassword(context) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        TextButton(
-          child: const Text(
-            'Forgot password?',
-            style: TextStyle(
-              color: Colors.blue,
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-            ),
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ForgotPasswordPage()),
-            );
-          },
-        ),
-      ],
-    ),
-  );
-}
-
-TextButton loginButton(context) {
-  return TextButton(
-    onPressed: () {
-      login(context);
-    },
-    child: Container(
-      height: 50,
-      width: 150,
-      margin: const EdgeInsets.symmetric(horizontal: 60),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          color: const Color.fromRGBO(199, 0, 56, 0.89)),
-      child: const Center(
-        child: Text("Login",
-            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
-      ),
     ),
   );
 }
@@ -168,12 +108,33 @@ Row notAMember(context) {
   );
 }
 
-void showInvalidLoginDialog(BuildContext context, String errorText) {
+TextButton resetButton(context) {
+  return TextButton(
+    onPressed: () {
+      forgotPassword(context);
+    },
+    child: Container(
+      height: 50,
+      width: 150,
+      margin: const EdgeInsets.symmetric(horizontal: 60),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          color: const Color.fromRGBO(199, 0, 56, 0.89)),
+      child: const Center(
+        child: Text("Reset My Password",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
+      ),
+    ),
+  );
+}
+
+void showInvalidDialog(
+    BuildContext context, String title, String errorText) async {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Invalid Login'),
+        title: Text(title),
         content: Text(errorText),
         actions: [
           TextButton(
@@ -188,17 +149,26 @@ void showInvalidLoginDialog(BuildContext context, String errorText) {
   );
 }
 
-Future<void> login(context) async {
-  await AuthService()
-      .logIn(mail: _mailController.text, password: _passwordController.text)
-      .then((uid) {
+AppBar appBarButtons(context) {
+  return AppBar(
+    leading: const BackButton(
+      color: Colors.black,
+    ),
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+  );
+}
+
+Future<void> forgotPassword(context) async {
+  var status = await AuthService().resetPassword(email: _mailController.text);
+  if (status == "success") {
+    _mailController.clear();
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const HomePage()),
+      MaterialPageRoute(builder: (context) => const LoginPage()),
     );
-    _mailController.clear();
-    _passwordController.clear();
-  }).catchError((e) {
-    showInvalidSigninDialog(context, e.message);
-  });
+    showInvalidDialog(context, "Success", "Please check your e-mail!");
+  } else {
+    showInvalidDialog(context, "Error", status);
+  }
 }
