@@ -67,7 +67,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '779797669893',
     projectId: 'fir-test-d2f09',
     storageBucket: 'fir-test-d2f09.appspot.com',
-    iosClientId: '779797669893-dcrra9tbd4ahlqoho1fqf95fb385kd2d.apps.googleusercontent.com',
+    iosClientId:
+        '779797669893-dcrra9tbd4ahlqoho1fqf95fb385kd2d.apps.googleusercontent.com',
     iosBundleId: 'com.example.earthquakeDamageAssessment',
   );
 
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '779797669893',
     projectId: 'fir-test-d2f09',
     storageBucket: 'fir-test-d2f09.appspot.com',
-    iosClientId: '779797669893-dcrra9tbd4ahlqoho1fqf95fb385kd2d.apps.googleusercontent.com',
+    iosClientId:
+        '779797669893-dcrra9tbd4ahlqoho1fqf95fb385kd2d.apps.googleusercontent.com',
     iosBundleId: 'com.example.earthquakeDamageAssessment',
   );
 }

@@ -3,7 +3,7 @@ import 'sign_in_page.dart';
 import 'login_page.dart';
 
 class FirstPage extends StatelessWidget {
-  FirstPage({super.key});
+  const FirstPage({super.key});
 
   @override
   Widget build(BuildContext context) {

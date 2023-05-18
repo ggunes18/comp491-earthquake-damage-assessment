@@ -1,15 +1,15 @@
-import 'package:earthquake_damage_assessment/pages/admin_profile_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/admin_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'admin_home_page.dart';
 
-class RequestTable extends StatefulWidget {
-  const RequestTable({super.key});
+class RequestTablePage extends StatefulWidget {
+  const RequestTablePage({super.key});
 
   @override
-  State<RequestTable> createState() => _RequestTableState();
+  State<RequestTablePage> createState() => _RequestTablePageState();
 }
 
-class _RequestTableState extends State<RequestTable> {
+class _RequestTablePageState extends State<RequestTablePage> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {

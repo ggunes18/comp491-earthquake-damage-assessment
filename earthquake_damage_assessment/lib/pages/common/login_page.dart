@@ -1,20 +1,13 @@
-import 'package:earthquake_damage_assessment/pages/home_page.dart';
-import 'package:earthquake_damage_assessment/pages/victim_helper_checbox.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:earthquake_damage_assessment/pages/victim/home_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
-import 'package:flutter/services.dart';
-import 'login_page.dart';
+import 'package:flutter/material.dart';
+import 'sign_in_page.dart';
 
 final TextEditingController _mailController = TextEditingController();
-final TextEditingController _userNameController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
-final TextEditingController _passwordControllerSecond = TextEditingController();
 
-final VictimHelperCheckBoxes _checkBoxes = VictimHelperCheckBoxes();
-
-class SignInPage extends StatelessWidget {
-  const SignInPage({Key? key}) : super(key: key);
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,25 +18,20 @@ class SignInPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
-              signUpText(),
+              loginText(),
               const SizedBox(height: 10),
               texts("Email"),
               textFields("Please enter your email", _mailController),
               const SizedBox(height: 10),
-              texts("Username"),
-              textFields("Please enter your username", _userNameController),
-              const SizedBox(height: 10),
               texts("Password"),
+              const SizedBox(height: 10),
               textFields("Please enter your password", _passwordController),
-              texts("Password"),
-              textFields("Please enter your password again",
-                  _passwordControllerSecond),
               const SizedBox(height: 10),
-              VictimHelperCheckBoxes(),
+              forgotPassword(),
               const SizedBox(height: 25),
-              signInButton(context),
+              loginButton(context),
               const SizedBox(height: 50),
-              alreadyAMember(context),
+              notAMember(context),
             ],
           ),
         ),
@@ -52,9 +40,9 @@ class SignInPage extends StatelessWidget {
   }
 }
 
-Text signUpText() {
+Text loginText() {
   return const Text(
-    'SIGN IN',
+    'LOGIN',
     style: TextStyle(
       color: Color.fromRGBO(199, 0, 56, 0.89),
       fontSize: 30,
@@ -93,26 +81,33 @@ Padding textFields(hintText, controllerType) {
         filled: true,
         hintText: hintText,
       ),
-      obscureText: hintText == "Please enter your password" ||
-              hintText == "Please enter your password again"
-          ? true
-          : false,
-      enableSuggestions: hintText == "Please enter your password" ||
-              hintText == "Please enter your password again"
-          ? false
-          : true,
-      autocorrect: hintText == "Please enter your password" ||
-              hintText == "Please enter your password again"
-          ? false
-          : true,
+      obscureText: hintText == "Please enter your password" ? true : false,
+      enableSuggestions:
+          hintText == "Please enter your password" ? false : true,
+      autocorrect: hintText == "Please enter your password" ? false : true,
     ),
   );
 }
 
-TextButton signInButton(context) {
+Padding forgotPassword() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          'Forgot Password?',
+          style: TextStyle(color: Colors.grey[600]),
+        ),
+      ],
+    ),
+  );
+}
+
+TextButton loginButton(context) {
   return TextButton(
     onPressed: () {
-      signUserIn(context);
+      login(context);
     },
     child: Container(
       height: 50,
@@ -122,26 +117,26 @@ TextButton signInButton(context) {
           borderRadius: BorderRadius.circular(50),
           color: const Color.fromRGBO(199, 0, 56, 0.89)),
       child: const Center(
-        child: Text("Sign In",
+        child: Text("Login",
             style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
       ),
     ),
   );
 }
 
-Row alreadyAMember(context) {
+Row notAMember(context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       const Text(
-        'Already a member?',
+        'Not a member?',
         style:
             TextStyle(color: Color.fromARGB(255, 103, 103, 103), fontSize: 13),
       ),
       const SizedBox(width: 4),
       TextButton(
         child: const Text(
-          'Login now.',
+          'Register now',
           style: TextStyle(
             color: Colors.blue,
             fontWeight: FontWeight.bold,
@@ -151,7 +146,7 @@ Row alreadyAMember(context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
+            MaterialPageRoute(builder: (context) => const SignInPage()),
           );
         },
       ),
@@ -159,12 +154,12 @@ Row alreadyAMember(context) {
   );
 }
 
-void showInvalidSigninDialog(BuildContext context, String errorText) {
+void showInvalidLoginDialog(BuildContext context, String errorText) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Invalid Signin'),
+        title: const Text('Invalid Login'),
         content: Text(errorText),
         actions: [
           TextButton(
@@ -179,24 +174,17 @@ void showInvalidSigninDialog(BuildContext context, String errorText) {
   );
 }
 
-Future<void> signUserIn(context) async {
-  if (_passwordController.text == _passwordControllerSecond.text) {
-    await AuthService()
-        .signIn(
-            mail: _mailController.text,
-            userName: _userNameController.text,
-            password: _passwordController.text,
-            isVictim: _checkBoxes.isVictimSelected,
-            isHelper: _checkBoxes.isHelperSelected)
-        .then((uid) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    }).catchError((e) {
-      showInvalidSigninDialog(context, e.message);
-    });
-  } else {
-    showInvalidSigninDialog(context, "Please make sure your passwords match!");
-  }
+Future<void> login(context) async {
+  await AuthService()
+      .logIn(mail: _mailController.text, password: _passwordController.text)
+      .then((uid) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+    _mailController.clear();
+    _passwordController.clear();
+  }).catchError((e) {
+    showInvalidSigninDialog(context, e.message);
+  });
 }

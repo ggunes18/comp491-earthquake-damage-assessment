@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:earthquake_damage_assessment/pages/admin_home_page.dart';
-import 'package:earthquake_damage_assessment/pages/home_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/admin_home_page.dart';
+import 'package:earthquake_damage_assessment/pages/victim/home_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'pages/first_page.dart';
+import 'pages/common/first_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
           ? isHelper
               ? const AdminPage()
               : const HomePage()
-          : FirstPage(),
+          : const FirstPage(),
     );
   }
 }

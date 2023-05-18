@@ -1,8 +1,8 @@
-import 'package:earthquake_damage_assessment/pages/home_page_buttons.dart';
+import 'package:earthquake_damage_assessment/pages/victim/home_page_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import "profile_page.dart";
+import 'profile_page.dart';
 import 'package:geolocator/geolocator.dart';
 
 double globalLatitude = 0.0;
@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
       );
     }
   }
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Color.fromRGBO(199, 0, 56, 0.89),
+            selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
             onTap: _onItemTapped,
           ),
           body: SafeArea(
@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     // AppName
                     Row(
-                      children: [
+                      children: const [
                         Text(
                           "KuHelp",
                           style: TextStyle(
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // search bar
                     TextField(
@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                         filled: true,
                         fillColor: Colors.grey[200],
                         hintText: "Search for Safe Location",
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
                         prefixIconColor: Colors.grey[600],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Map Integration
                     Container(
@@ -173,11 +173,11 @@ class _HomePageState extends State<HomePage> {
                                           position.longitude)));
                                   setState(() {});
                                 },
-                                label: Text('Locate me'),
-                                icon: Icon(Icons.location_searching),
+                                label: const Text('Locate me'),
+                                icon: const Icon(Icons.location_searching),
                                 hoverColor: Colors.white,
                                 backgroundColor:
-                                    Color.fromRGBO(199, 0, 56, 0.89)),
+                                    const Color.fromRGBO(199, 0, 56, 0.89)),
                           ),
                         ],
                       ),
@@ -185,17 +185,17 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   color: Colors.grey[200],
                   child: Center(
                     child: Column(children: [
                       //Heading
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: const [
                           Text(
                             "Request Help",
                             style: TextStyle(
@@ -206,12 +206,12 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       //List of buttons
                       Expanded(
                         child: ListView(
-                          children: [
+                          children: const [
                             HomePageButton(
                               text: "INJURED",
                             ),

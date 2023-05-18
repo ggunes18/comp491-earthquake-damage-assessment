@@ -1,15 +1,11 @@
-import 'package:earthquake_damage_assessment/pages/editing_page.dart';
-import 'package:earthquake_damage_assessment/pages/request_page.dart';
-import 'package:earthquake_damage_assessment/pages/request_table.dart';
+import 'package:earthquake_damage_assessment/pages/victim/editing_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'admin_home_page.dart';
 import 'home_page.dart';
-
-import '../service/auth.dart';
-import 'login_page.dart';
+import '../../service/auth.dart';
+import '../common/login_page.dart';
 
 String location = "Location";
 String namesurname = "Name Surname";
@@ -37,33 +33,26 @@ class Save2 {
   }
 }
 
-class AdminProfilePage extends StatefulWidget {
-  const AdminProfilePage({Key? key}) : super(key: key);
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  _AdminProfilePageState createState() => _AdminProfilePageState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _AdminProfilePageState extends State<AdminProfilePage> {
+class _ProfilePageState extends State<ProfilePage> {
   final save2 = Save2();
   late Future<Map<String, String>> fetchedData;
-  int _selectedIndex = 2;
+  int _selectedIndex = 1;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const RequestTable()),
-      );
-    }
-    if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const AdminPage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     }
   }
@@ -97,10 +86,6 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.report),
-            label: 'Requests',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
@@ -131,7 +116,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
 
 AppBar appBarButtons(context) {
   return AppBar(
-    leading: BackButton(
+    leading: const BackButton(
       color: Colors.black,
     ),
     backgroundColor: Colors.transparent,
@@ -141,10 +126,10 @@ AppBar appBarButtons(context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => EditingPage()),
+            MaterialPageRoute(builder: (context) => const EditingPage()),
           );
         },
-        icon: Icon(Icons.edit),
+        icon: const Icon(Icons.edit),
         color: Colors.black,
       )
     ],
@@ -153,34 +138,34 @@ AppBar appBarButtons(context) {
 
 ListView body(Map<String, String> data) {
   return ListView(
-    physics: BouncingScrollPhysics(),
+    physics: const BouncingScrollPhysics(),
     children: [
       profilePhoto(),
-      SizedBox(
+      const SizedBox(
         height: 20,
       ),
       nameText(data['namesurname']!),
       locationText(data['location']!),
-      SizedBox(
+      const SizedBox(
         height: 20,
       ),
       //biography_text(data['biography']!),
-      SizedBox(
+      const SizedBox(
         height: 20,
       ),
       generalInfoPhoneMail("phoneNum", "mail"),
       generalInfoBloodSeconPerson("bloodType", "secondPerson"),
-      SizedBox(
+      const SizedBox(
         height: 20,
       ),
-      Divider(
+      const Divider(
         color: Colors.black,
         height: 25,
         thickness: 1,
         indent: 25,
         endIndent: 25,
       ),
-      SizedBox(
+      const SizedBox(
         height: 20,
       ),
       requests(),
@@ -189,7 +174,7 @@ ListView body(Map<String, String> data) {
 }
 
 CircleAvatar profilePhoto() {
-  return CircleAvatar(
+  return const CircleAvatar(
     //backgroundImage: AssetImage("assets/images/profile_picture.png"),
     radius: 120,
   );
@@ -199,7 +184,7 @@ Center nameText(String namesurname) {
   return Center(
     child: Text(
       namesurname,
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.black,
         fontSize: 20,
       ),
@@ -211,7 +196,7 @@ Center locationText(String location) {
   return Center(
     child: Text(
       location,
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.black,
         fontSize: 15,
       ),
@@ -223,7 +208,7 @@ Row generalInfoPhoneMail(phoneNum, mail) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Icon(Icons.local_phone),
+      const Icon(Icons.local_phone),
       Text(
         phoneNum,
         style: const TextStyle(
@@ -231,10 +216,10 @@ Row generalInfoPhoneMail(phoneNum, mail) {
           fontSize: 16,
         ),
       ),
-      SizedBox(
+      const SizedBox(
         width: 20,
       ),
-      Icon(Icons.mail),
+      const Icon(Icons.mail),
       Text(
         mail,
         style: const TextStyle(
@@ -250,7 +235,7 @@ Row generalInfoBloodSeconPerson(bloodType, secondPerson) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Icon(Icons.bloodtype),
+      const Icon(Icons.bloodtype),
       Text(
         bloodType,
         style: const TextStyle(
@@ -258,10 +243,10 @@ Row generalInfoBloodSeconPerson(bloodType, secondPerson) {
           fontSize: 16,
         ),
       ),
-      SizedBox(
+      const SizedBox(
         width: 20,
       ),
-      Icon(Icons.account_box_rounded),
+      const Icon(Icons.account_box_rounded),
       Text(
         secondPerson,
         style: const TextStyle(
@@ -275,7 +260,7 @@ Row generalInfoBloodSeconPerson(bloodType, secondPerson) {
 
 Container requests() {
   return Container(
-    child: Column(children: [
+    child: Column(children: const [
       Text("Request 1 - (Request Type)"),
       Text("Adress"),
     ]),
@@ -285,7 +270,7 @@ Container requests() {
 Future<void> logout(context) async {
   await AuthService().signOut();
   Navigator.of(context).pushAndRemoveUntil(
-    CupertinoPageRoute(builder: (context) => LoginPage()),
+    CupertinoPageRoute(builder: (context) => const LoginPage()),
     (_) => false,
   );
 }
