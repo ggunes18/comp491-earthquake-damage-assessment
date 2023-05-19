@@ -7,26 +7,43 @@ import 'home_page.dart';
 import '../../service/auth.dart';
 import '../common/login_page.dart';
 
-String location = "Location";
-String namesurname = "Name Surname";
+String userName = "-";
+String mail = "-";
+String nameSurname = "-";
+String location = "-";
+String phone = "-";
+String bloodType = "-";
+String emergencyPerson = "-";
 
-class Save2 {
+class GetInfo {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
-  Future<Map<String, String>> save() async {
+
+  Future<Map<String, String>> getInfo() async {
     final currentUser = _firebaseAuth.currentUser;
     final docRef = _firestore.collection('UserTest').doc(currentUser?.uid);
     final docSnapshot = await docRef.get();
     final data = docSnapshot.data();
+    print(data);
 
-    String fetchedLocation = data?['Location'] ?? "Location";
-    String fetchedNamesurname = data?['NameSurname'] ?? "Name Surname";
+    String fetchedUserName = data?['userName'] ?? userName;
+    String fetchedMail = data?['mail'] ?? mail;
+    String fetchedLocation = data?['location'] ?? location;
+    String fetchedNameSurname = data?['nameSurname'] ?? nameSurname;
+    String fetchedPhone = data?['phone'] ?? phone;
+    String fetchedBloodType = data?['bloodType'] ?? bloodType;
+    String fetchedEmergencyPerson = data?['emergencyPerson'] ?? emergencyPerson;
 
     return {
+      'userName': fetchedUserName,
+      'mail': fetchedMail,
+      'nameSurname': fetchedNameSurname,
       'location': fetchedLocation,
-      'namesurname': fetchedNamesurname,
+      'phone': fetchedPhone,
+      'bloodType': fetchedBloodType,
+      'emergencyPerson': fetchedEmergencyPerson
     };
   }
 }
@@ -39,7 +56,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final save2 = Save2();
+  final getInfo = GetInfo();
   late Future<Map<String, String>> fetchedData;
   int _selectedIndex = 1;
 
@@ -62,10 +79,15 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<Map<String, String>> fetchData() async {
-    Map<String, String> fetchedData = await save2.save();
+    Map<String, String> fetchedData = await getInfo.getInfo();
 
-    namesurname = fetchedData['namesurname']!;
+    userName = fetchedData['userName']!;
+    mail = fetchedData['mail']!;
     location = fetchedData['location']!;
+    nameSurname = fetchedData['nameSurname']!;
+    phone = fetchedData['phone']!;
+    bloodType = fetchedData['bloodType']!;
+    emergencyPerson = fetchedData['emergencyPerson']!;
 
     return fetchedData;
   }
@@ -138,11 +160,11 @@ ListView body(Map<String, String> data) {
   return ListView(
     physics: const BouncingScrollPhysics(),
     children: [
-      profilePhoto(data['namesurname']!),
+      profilePhoto(data['userName']!),
       const SizedBox(
         height: 20,
       ),
-      nameText(data['namesurname']!),
+      nameText(data['nameSurname']!),
       locationText(data['location']!),
       const SizedBox(
         height: 20,
@@ -150,8 +172,11 @@ ListView body(Map<String, String> data) {
       const SizedBox(
         height: 20,
       ),
-      generalInfoPhoneMail("phoneNum", "mail"),
-      generalInfoBloodSeconPerson("bloodType", "secondPerson"),
+      generalInfoPhoneMail(data['phone']!, data['mail']!),
+      const SizedBox(
+        height: 10,
+      ),
+      generalInfoBloodSeconPerson(data['bloodType']!, data['emergencyPerson']!),
       const SizedBox(
         height: 20,
       ),
@@ -174,8 +199,7 @@ CircleAvatar profilePhoto(String username) {
   String initials =
       username.isNotEmpty == true ? username[0].toUpperCase() : '';
   return CircleAvatar(
-    backgroundColor: const Color.fromRGBO(
-        199, 0, 56, 0.89), // Set the background color of the avatar
+    backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
     radius: 120,
     child: Text(
       initials,

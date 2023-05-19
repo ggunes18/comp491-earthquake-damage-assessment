@@ -2,8 +2,45 @@ import 'package:flutter/material.dart';
 import 'profile_page.dart';
 import 'package:earthquake_damage_assessment/pages/victim/edit_victim.dart';
 
-class EditingPage extends StatelessWidget {
-  const EditingPage({super.key});
+final TextEditingController _nameController = TextEditingController();
+final TextEditingController _locationController = TextEditingController();
+final TextEditingController _phoneController = TextEditingController();
+String _bloodTypeController = 'A+';
+final TextEditingController _emergencyPersonController =
+    TextEditingController();
+
+const bloodTypes = <String>['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', '0+', '0-'];
+
+class EditingPage extends StatefulWidget {
+  const EditingPage({Key? key}) : super(key: key);
+
+  @override
+  _EditingPageState createState() => _EditingPageState();
+}
+
+class _EditingPageState extends State<EditingPage> {
+  Widget bloodTypeBox() {
+    return DropdownButton<String>(
+      value: _bloodTypeController,
+      items: bloodTypes.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 15),
+          ),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          _bloodTypeController = newValue!;
+        });
+      },
+      focusColor: Color.fromARGB(255, 226, 226, 226),
+      autofocus: true,
+      elevation: 15,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,26 +58,26 @@ class EditingPage extends StatelessWidget {
               textFields("Please enter your name and surname", _nameController),
               const SizedBox(height: 10),
               texts("Location"),
-              textFields("Please enter your location", _locationController),
+              textFields(
+                  "Please enter your location (city/county/neighborhood)",
+                  _locationController),
               const SizedBox(height: 10),
               texts("Phone Number"),
-              textFields("Please enter your phone number", _nameController),
-              const SizedBox(height: 10),
-              texts("Mail"),
-              textFields("Please enter your mail", _nameController),
+              textFields("(5xx)xxxxxxx", _phoneController),
               const SizedBox(height: 10),
               texts("Blood Type"),
-              textFields("Please enter your blood type", _nameController),
+              bloodTypeBox(),
               const SizedBox(height: 10),
-              texts("Second Person"),
-              textFields("Please enter the second person to be reached",
-                  _nameController),
+              texts("Emergency Person Number"),
+              textFields("(5xx)xxxxxxx", _emergencyPersonController),
               const SizedBox(height: 10),
-              //texts("Biography"),
-              //textFields("Please enter your biography", _biographyController),
-              //const SizedBox(height: 25),
-              submitButton(context, _nameController, _locationController,
-                  _biographyController),
+              submitButton(
+                  context,
+                  _nameController,
+                  _locationController,
+                  _phoneController,
+                  _bloodTypeController,
+                  _emergencyPersonController),
             ],
           ),
         ),
@@ -48,10 +85,6 @@ class EditingPage extends StatelessWidget {
     );
   }
 }
-
-final TextEditingController _nameController = TextEditingController();
-final TextEditingController _locationController = TextEditingController();
-final TextEditingController _biographyController = TextEditingController();
 
 Text editText() {
   return const Text(
@@ -65,11 +98,22 @@ Text editText() {
 
 AppBar appBarButtons(context) {
   return AppBar(
-    leading: const BackButton(
-      color: Colors.black,
-    ),
     backgroundColor: Colors.transparent,
     elevation: 0,
+    leading: Builder(
+      builder: (BuildContext context) {
+        return BackButton(
+          onPressed: () {
+            clearTextFields();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
+          },
+          color: Colors.black,
+        );
+      },
+    ),
   );
 }
 
@@ -109,33 +153,36 @@ Padding textFields(hintText, controllerType) {
 }
 
 Future<void> savecredentials(
-  context,
-  TextEditingController nameController,
-  TextEditingController locationController,
-  TextEditingController biographyController,
-) async {
-  await SaveService().save(
-      namesurname: _nameController.text,
-      location: _locationController.text,
-      biography: _biographyController.text);
-}
-
-TextButton submitButton(
     context,
     TextEditingController nameController,
     TextEditingController locationController,
-    TextEditingController biographyController) {
+    TextEditingController phoneController,
+    String bloodTypeController,
+    TextEditingController emergencyPersonController) async {
+  await SaveService().save(
+      nameSurname: _nameController.text,
+      location: _locationController.text,
+      phone: _phoneController.text,
+      bloodType: _bloodTypeController,
+      emergencyPerson: _emergencyPersonController.text);
+}
+
+TextButton submitButton(
+  context,
+  TextEditingController nameController,
+  TextEditingController locationController,
+  TextEditingController phoneController,
+  String bloodTypeController,
+  TextEditingController emergencyPersonController,
+) {
   return TextButton(
     onPressed: () {
-      savecredentials(
-        context,
-        nameController,
-        locationController,
-        biographyController,
-      );
+      savecredentials(context, nameController, locationController,
+          phoneController, bloodTypeController, emergencyPersonController);
+      clearTextFields();
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
+        MaterialPageRoute(builder: (context) => ProfilePage()),
       );
     },
     child: Container(
@@ -151,4 +198,11 @@ TextButton submitButton(
       ),
     ),
   );
+}
+
+void clearTextFields() {
+  _nameController.clear();
+  _locationController.clear();
+  _phoneController.clear();
+  _emergencyPersonController.clear();
 }

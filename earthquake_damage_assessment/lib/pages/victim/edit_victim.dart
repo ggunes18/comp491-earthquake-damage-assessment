@@ -10,9 +10,11 @@ class SaveService {
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
   Future<Void?> save(
-      {required String namesurname,
+      {required String nameSurname,
       required String location,
-      required String biography}) async {
+      required String phone,
+      required String bloodType,
+      required String emergencyPerson}) async {
     final currentUser = _firebaseAuth.currentUser;
     final docRef = _firestore.collection('UserTest').doc(currentUser?.uid);
     final docSnapshot = await docRef.get();
@@ -20,13 +22,19 @@ class SaveService {
     final mail = data?['mail'];
     final password = data?['password'];
     final username = data?['userName'];
+    final isHelper = data?['isHelper'];
+    final isVictim = data?['isVictim'];
     final newData = {
       'mail': mail ?? data?['mail'],
       'password': password ?? data?['password'],
       'userName': username ?? data?['userName'],
-      'NameSurname': namesurname ?? data?['NameSurname'],
-      'Location': location ?? data?['Location'],
-      'Biography': biography ?? data?['Biography'],
+      'isHelper': isHelper ?? data?['isHelper'],
+      'isVictim': isVictim ?? data?['isVictim'],
+      'nameSurname': nameSurname ?? data?['nameSurname'],
+      'location': location ?? data?['location'],
+      'phone': phone ?? data?['phone'],
+      'bloodType': bloodType ?? data?['bloodType'],
+      'emergencyPerson': emergencyPerson ?? data?['emergencyPerson'],
     };
     await docRef.set(newData);
   }
