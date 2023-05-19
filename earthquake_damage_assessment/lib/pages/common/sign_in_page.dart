@@ -208,6 +208,9 @@ Future<void> signVictimIn(context) async {
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
       );
+      _mailController.clear();
+      _userNameController.clear();
+      _passwordController.clear();
     }).catchError((e) {
       showInvalidSigninDialog(context, e.message);
     });

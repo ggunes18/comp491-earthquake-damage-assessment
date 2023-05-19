@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
 
   CameraPosition initialCameraPosition = const CameraPosition(
     target: LatLng(41.2054283, 29.07241),
-    zoom: 14,
+    zoom: 15,
   );
 
   late GoogleMapController mapController;
