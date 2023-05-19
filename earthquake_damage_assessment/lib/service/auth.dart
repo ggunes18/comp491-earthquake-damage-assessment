@@ -9,16 +9,20 @@ class AuthService {
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<Void?> logIn({required String mail, required String password}) async {
+  Future<String> logIn({required String mail, required String password}) async {
     await _firebaseAuth.signInWithEmailAndPassword(
         email: mail, password: password);
+
+    String uid = _firebaseAuth.currentUser?.uid ?? '';
+
+    return uid;
   }
 
   Future<Void?> signOut() async {
     await _firebaseAuth.signOut();
   }
 
-  Future<Void?> signIn(
+  Future<Void?> signVictimIn(
       {required String mail,
       required String userName,
       required String password,
@@ -30,6 +34,24 @@ class AuthService {
     await _firestore.collection("UserTest").doc(user.user!.uid).set({
       "mail": mail,
       "userName": userName,
+      "password": password,
+      "isVictim": isVictim,
+      "isHelper": isHelper
+    });
+  }
+
+  Future<Void?> signHelperIn(
+      {required String mail,
+      required String organization,
+      required String password,
+      required bool isVictim,
+      required bool isHelper}) async {
+    var user = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: mail, password: password);
+
+    await _firestore.collection("UserTest").doc(user.user!.uid).set({
+      "mail": mail,
+      "organization": organization,
       "password": password,
       "isVictim": isVictim,
       "isHelper": isHelper

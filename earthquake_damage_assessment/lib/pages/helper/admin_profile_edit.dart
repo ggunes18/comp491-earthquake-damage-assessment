@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'profile_page.dart';
-import 'package:earthquake_damage_assessment/pages/victim/edit_victim.dart';
+import 'admin_profile_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/edit_helper.dart';
 
-class EditingPage extends StatelessWidget {
-  const EditingPage({super.key});
+class AdminEditingPage extends StatelessWidget {
+  const AdminEditingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,27 +20,14 @@ class EditingPage extends StatelessWidget {
               texts("Name and Surname"),
               textFields("Please enter your name and surname", _nameController),
               const SizedBox(height: 10),
-              texts("Location"),
-              textFields("Please enter your location", _locationController),
-              const SizedBox(height: 10),
               texts("Phone Number"),
-              textFields("Please enter your phone number", _nameController),
+              textFields("Please enter your phone number", _phoneController),
               const SizedBox(height: 10),
               texts("Mail"),
-              textFields("Please enter your mail", _nameController),
+              textFields("Please enter your mail", _mailController),
               const SizedBox(height: 10),
-              texts("Blood Type"),
-              textFields("Please enter your blood type", _nameController),
-              const SizedBox(height: 10),
-              texts("Second Person"),
-              textFields("Please enter the second person to be reached",
-                  _nameController),
-              const SizedBox(height: 10),
-              //texts("Biography"),
-              //textFields("Please enter your biography", _biographyController),
-              //const SizedBox(height: 25),
-              submitButton(context, _nameController, _locationController,
-                  _biographyController),
+              submitButton(
+                  context, _nameController, _phoneController, _mailController),
             ],
           ),
         ),
@@ -50,8 +37,8 @@ class EditingPage extends StatelessWidget {
 }
 
 final TextEditingController _nameController = TextEditingController();
-final TextEditingController _locationController = TextEditingController();
-final TextEditingController _biographyController = TextEditingController();
+final TextEditingController _phoneController = TextEditingController();
+final TextEditingController _mailController = TextEditingController();
 
 Text editText() {
   return const Text(
@@ -116,26 +103,26 @@ Future<void> savecredentials(
 ) async {
   await SaveService().save(
       namesurname: _nameController.text,
-      location: _locationController.text,
-      biography: _biographyController.text);
+      phone: _phoneController.text,
+      mail: _mailController.text);
 }
 
 TextButton submitButton(
     context,
     TextEditingController nameController,
-    TextEditingController locationController,
-    TextEditingController biographyController) {
+    TextEditingController phoneController,
+    TextEditingController mailController) {
   return TextButton(
     onPressed: () {
       savecredentials(
         context,
         nameController,
-        locationController,
-        biographyController,
+        phoneController,
+        mailController,
       );
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
+        MaterialPageRoute(builder: (context) => const AdminProfilePage()),
       );
     },
     child: Container(

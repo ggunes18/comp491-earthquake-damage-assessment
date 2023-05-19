@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:earthquake_damage_assessment/pages/common/forgot_password_page.dart';
 import 'package:earthquake_damage_assessment/pages/victim/home_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
 import 'package:flutter/material.dart';
+import '../helper/admin_home_page.dart';
 import 'sign_in_page.dart';
 
 final TextEditingController _mailController = TextEditingController();
@@ -192,13 +194,24 @@ Future<void> login(context) async {
   await AuthService()
       .logIn(mail: _mailController.text, password: _passwordController.text)
       .then((uid) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const HomePage()),
-    );
-    _mailController.clear();
-    _passwordController.clear();
-  }).catchError((e) {
-    showInvalidSigninDialog(context, e.message);
+    FirebaseFirestore.instance
+        .collection('UserTest')
+        .doc(uid as String?)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        bool isHelper = doc.get('isHelper');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  isHelper ? const AdminPage() : const HomePage()),
+        );
+        _mailController.clear();
+        _passwordController.clear();
+      }
+    }).catchError((e) {
+      showInvalidSigninDialog(context, e.message);
+    });
   });
 }

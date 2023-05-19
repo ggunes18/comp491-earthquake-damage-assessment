@@ -23,7 +23,6 @@ class Save2 {
 
     String fetchedLocation = data?['Location'] ?? "Location";
     String fetchedNamesurname = data?['NameSurname'] ?? "Name Surname";
-    String fetchedUsername = data?['userName'] ?? "User Name";
 
     return {
       'location': fetchedLocation,
