@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import '../common/location_services.dart';
 import 'home_page.dart';
 
 final TextEditingController _nameController = TextEditingController();
-//final TextEditingController _locationController = TextEditingController();
 final TextEditingController _needsController = TextEditingController();
 final TextEditingController _infoController = TextEditingController();
 double emergencyLevel = 0;
