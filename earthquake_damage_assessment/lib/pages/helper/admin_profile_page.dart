@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'admin_home_page.dart';
-import '../victim/editing_page.dart';
 import '../../service/auth.dart';
 import '../common/login_page.dart';
+import 'admin_profile_edit.dart';
 
 String location = "Location";
 String namesurname = "Name Surname";
+String organization = "Organization";
 
 class Save2 {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -22,14 +23,14 @@ class Save2 {
     final docSnapshot = await docRef.get();
     final data = docSnapshot.data();
 
-    String fetchedBiography = data?['Biography'] ?? "Biography...";
     String fetchedLocation = data?['Location'] ?? "Location";
     String fetchedNamesurname = data?['NameSurname'] ?? "Name Surname";
+    String fetchedOrganization = data?['organization'] ?? "Organization";
 
     return {
-      'biography': fetchedBiography,
       'location': fetchedLocation,
       'namesurname': fetchedNamesurname,
+      'organization': fetchedOrganization,
     };
   }
 }
@@ -76,6 +77,7 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
 
     namesurname = fetchedData['namesurname']!;
     location = fetchedData['location']!;
+    organization = fetchedData['organization']!;
 
     return fetchedData;
   }
@@ -138,7 +140,7 @@ AppBar appBarButtons(context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const EditingPage()),
+            MaterialPageRoute(builder: (context) => const AdminEditingPage()),
           );
         },
         icon: const Icon(Icons.edit),
@@ -152,7 +154,7 @@ ListView body(Map<String, String> data) {
   return ListView(
     physics: const BouncingScrollPhysics(),
     children: [
-      profilePhoto(),
+      profilePhoto(data['organization']!),
       const SizedBox(
         height: 20,
       ),
@@ -161,12 +163,11 @@ ListView body(Map<String, String> data) {
       const SizedBox(
         height: 20,
       ),
-      //biography_text(data['biography']!),
       const SizedBox(
         height: 20,
       ),
       generalInfoPhoneMail("phoneNum", "mail"),
-      generalInfoBloodSeconPerson("bloodType", "secondPerson"),
+      generalInfoOrganization(organization),
       const SizedBox(
         height: 20,
       ),
@@ -179,16 +180,25 @@ ListView body(Map<String, String> data) {
       ),
       const SizedBox(
         height: 20,
-      ),
-      requests(),
+      )
     ],
   );
 }
 
-CircleAvatar profilePhoto() {
-  return const CircleAvatar(
-    //backgroundImage: AssetImage("assets/images/profile_picture.png"),
+CircleAvatar profilePhoto(String organization) {
+  String initials =
+      organization.isNotEmpty == true ? organization[0].toUpperCase() : '';
+  return CircleAvatar(
+    backgroundColor: const Color.fromRGBO(
+        199, 0, 56, 0.89), // Set the background color of the avatar
     radius: 120,
+    child: Text(
+      initials,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 60,
+      ),
+    ),
   );
 }
 
@@ -243,13 +253,13 @@ Row generalInfoPhoneMail(phoneNum, mail) {
   );
 }
 
-Row generalInfoBloodSeconPerson(bloodType, secondPerson) {
+Row generalInfoOrganization(organization) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      const Icon(Icons.bloodtype),
+      const Icon(Icons.apartment_sharp),
       Text(
-        bloodType,
+        organization,
         style: const TextStyle(
           color: Colors.black,
           fontSize: 16,
@@ -258,24 +268,7 @@ Row generalInfoBloodSeconPerson(bloodType, secondPerson) {
       const SizedBox(
         width: 20,
       ),
-      const Icon(Icons.account_box_rounded),
-      Text(
-        secondPerson,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-        ),
-      ),
     ],
-  );
-}
-
-Container requests() {
-  return Container(
-    child: Column(children: const [
-      Text("Request 1 - (Request Type)"),
-      Text("Adress"),
-    ]),
   );
 }
 

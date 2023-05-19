@@ -17,7 +17,7 @@ class ForgotPasswordPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
-              loginText(),
+              forgotText(),
               const SizedBox(height: 10),
               texts("Email"),
               textFields("Please enter your email to reset your password",
@@ -33,7 +33,7 @@ class ForgotPasswordPage extends StatelessWidget {
   }
 }
 
-Text loginText() {
+Text forgotText() {
   return const Text(
     'Forgot Password',
     style: TextStyle(
@@ -75,36 +75,6 @@ Padding textFields(hintText, controllerType) {
         hintText: hintText,
       ),
     ),
-  );
-}
-
-Row notAMember(context) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      const Text(
-        'Not a member?',
-        style:
-            TextStyle(color: Color.fromARGB(255, 103, 103, 103), fontSize: 13),
-      ),
-      const SizedBox(width: 4),
-      TextButton(
-        child: const Text(
-          'Register now',
-          style: TextStyle(
-            color: Colors.blue,
-            fontWeight: FontWeight.bold,
-            fontSize: 13,
-          ),
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const SignInPage()),
-          );
-        },
-      ),
-    ],
   );
 }
 
