@@ -1,13 +1,13 @@
-import 'package:earthquake_damage_assessment/pages/victim/home_page.dart';
-import 'package:earthquake_damage_assessment/pages/common/victim_helper_checbox.dart';
+import 'package:earthquake_damage_assessment/pages/victim/victim_home_page.dart';
+import 'package:earthquake_damage_assessment/pages/common/checkbox_victim_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
-import '../helper/admin_home_page.dart';
+import '../helper/helper_home_page.dart';
 import 'login_page.dart';
 
 final TextEditingController _mailController = TextEditingController();
-final TextEditingController _userNameController = TextEditingController();
-final TextEditingController _organizationController = TextEditingController();
+final TextEditingController _usernOrganizationController =
+    TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
 final TextEditingController _passwordControllerSecond = TextEditingController();
 
@@ -16,17 +16,8 @@ final VictimHelperCheckBoxes _checkBoxes = VictimHelperCheckBoxes();
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);
 
-  TextEditingController getController() {
-    if (_checkBoxes.isHelperSelected) {
-      return _organizationController;
-    } else {
-      return _userNameController;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = getController();
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -42,7 +33,7 @@ class SignInPage extends StatelessWidget {
               texts("Username (Organization for helpers)"),
               textFields(
                   "Please enter your username (organization for helpers)",
-                  controller),
+                  _usernOrganizationController),
               const SizedBox(height: 10),
               texts("Password"),
               textFields("Please enter your password", _passwordController),
@@ -164,6 +155,10 @@ Row alreadyAMember(context) {
           ),
         ),
         onPressed: () {
+          _mailController.clear();
+          _usernOrganizationController.clear();
+          _passwordController.clear();
+          _passwordControllerSecond.clear();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const LoginPage()),
@@ -199,17 +194,17 @@ Future<void> signVictimIn(context) async {
     await AuthService()
         .signVictimIn(
             mail: _mailController.text,
-            userName: _userNameController.text,
+            userName: _usernOrganizationController.text,
             password: _passwordController.text,
             isVictim: _checkBoxes.isVictimSelected,
             isHelper: _checkBoxes.isHelperSelected)
         .then((uid) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const VictimHomePage()),
       );
       _mailController.clear();
-      _userNameController.clear();
+      _usernOrganizationController.clear();
       _passwordController.clear();
     }).catchError((e) {
       showInvalidSigninDialog(context, e.message);
@@ -224,15 +219,18 @@ Future<void> signHelperIn(context) async {
     await AuthService()
         .signHelperIn(
             mail: _mailController.text,
-            organization: _organizationController.text,
+            organization: _usernOrganizationController.text,
             password: _passwordController.text,
             isVictim: _checkBoxes.isVictimSelected,
             isHelper: _checkBoxes.isHelperSelected)
         .then((uid) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const AdminPage()),
+        MaterialPageRoute(builder: (context) => const HelperHomePage()),
       );
+      _mailController.clear();
+      _usernOrganizationController.clear();
+      _passwordController.clear();
     }).catchError((e) {
       showInvalidSigninDialog(context, e.message);
     });

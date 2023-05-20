@@ -1,12 +1,12 @@
-import 'package:earthquake_damage_assessment/pages/helper/request_table_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/helper_request_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'admin_home_page.dart';
+import 'helper_home_page.dart';
 import '../../service/auth.dart';
 import '../common/login_page.dart';
-import 'admin_editing_page.dart';
+import 'helper_editing_page.dart';
 
 String nameSurname = "-";
 String organization = "-";
@@ -39,14 +39,14 @@ class GetInfo {
   }
 }
 
-class AdminProfilePage extends StatefulWidget {
-  const AdminProfilePage({Key? key}) : super(key: key);
+class HelperProfilePage extends StatefulWidget {
+  const HelperProfilePage({Key? key}) : super(key: key);
 
   @override
-  _AdminProfilePageState createState() => _AdminProfilePageState();
+  _HelperProfilePageState createState() => _HelperProfilePageState();
 }
 
-class _AdminProfilePageState extends State<AdminProfilePage> {
+class _HelperProfilePageState extends State<HelperProfilePage> {
   final getInfo = GetInfo();
   late Future<Map<String, String>> fetchedData;
   int _selectedIndex = 2;
@@ -59,13 +59,13 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const RequestTablePage()),
+        MaterialPageRoute(builder: (context) => const HelperRequestPage()),
       );
     }
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const AdminPage()),
+        MaterialPageRoute(builder: (context) => const HelperHomePage()),
       );
     }
   }
@@ -88,53 +88,67 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          logout(context);
+    return WillPopScope(
+        onWillPop: () async {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HelperHomePage()),
+          );
+          return true;
         },
-        backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
-        child: const Icon(Icons.logout_outlined),
-      ),
-      appBar: appBarButtons(context),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.report),
-            label: 'Requests',
+        child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              logout(context);
+            },
+            backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
+            child: const Icon(Icons.logout_outlined),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+          appBar: appBarButtons(context),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.report),
+                label: 'Requests',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
+            currentIndex: 2,
+            selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
+            onTap: _onItemTapped,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+          body: FutureBuilder<Map<String, String>>(
+            future: fetchedData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text("Error: ${snapshot.error}"));
+              } else {
+                return body(snapshot.data!);
+              }
+            },
           ),
-        ],
-        currentIndex: 2,
-        selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
-        onTap: _onItemTapped,
-      ),
-      body: FutureBuilder<Map<String, String>>(
-        future: fetchedData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          } else {
-            return body(snapshot.data!);
-          }
-        },
-      ),
-    );
+        ));
   }
 }
 
 AppBar appBarButtons(context) {
   return AppBar(
-    leading: const BackButton(
+    leading: BackButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HelperHomePage()),
+        );
+      },
       color: Colors.black,
     ),
     backgroundColor: Colors.transparent,
@@ -144,7 +158,7 @@ AppBar appBarButtons(context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AdminEditingPage()),
+            MaterialPageRoute(builder: (context) => const HelperEditingPage()),
           );
         },
         icon: const Icon(Icons.edit),
@@ -264,6 +278,10 @@ Row generalInfoOrganization(organization) {
 
 Future<void> logout(context) async {
   await AuthService().signOut();
+  nameSurname = "-";
+  organization = "-";
+  mail = "-";
+  phone = "-";
   Navigator.of(context).pushAndRemoveUntil(
     CupertinoPageRoute(builder: (context) => const LoginPage()),
     (_) => false,

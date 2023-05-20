@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'request_page.dart';
+import 'victim_request_page.dart';
 
 class HomePageButton extends StatelessWidget {
   final String text;
@@ -15,7 +15,7 @@ class HomePageButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => RequestPage(
+              builder: (context) => VictimRequestPage(
                     requestType: text,
                   )),
         );

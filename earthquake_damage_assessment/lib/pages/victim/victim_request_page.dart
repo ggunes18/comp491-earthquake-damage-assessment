@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:earthquake_damage_assessment/service/location_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import '../common/location_services.dart';
-import 'home_page.dart';
+import 'victim_home_page.dart';
 
 final TextEditingController _nameController = TextEditingController();
 final TextEditingController _needsController = TextEditingController();
 final TextEditingController _infoController = TextEditingController();
 double emergencyLevel = 0;
 
-class RequestPage extends StatelessWidget {
+class VictimRequestPage extends StatelessWidget {
   final String requestType;
 
-  const RequestPage({super.key, required this.requestType});
+  const VictimRequestPage({super.key, required this.requestType});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class RequestPage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
+              MaterialPageRoute(builder: (context) => const VictimHomePage()),
             );
           },
         ),
@@ -185,7 +185,7 @@ Future<void> addRequest(context, requestType) async {
       emergencyLevel = 0;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const VictimHomePage()),
       );
     },
   );

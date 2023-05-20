@@ -1,20 +1,20 @@
 import 'dart:async';
 import 'package:earthquake_damage_assessment/pages/victim/home_page_buttons.dart';
+import 'package:earthquake_damage_assessment/service/location_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../common/location_services.dart';
-import 'profile_page.dart';
+import 'victim_profile_page.dart';
 import 'package:geolocator/geolocator.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class VictimHomePage extends StatefulWidget {
+  const VictimHomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<VictimHomePage> createState() => _VictimHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _VictimHomePageState extends State<VictimHomePage> {
   int _selectedIndex = 0;
 
   CameraPosition initialCameraPosition = const CameraPosition(
@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
+        MaterialPageRoute(builder: (context) => const VictimProfilePage()),
       );
     }
   }
