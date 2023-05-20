@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:earthquake_damage_assessment/pages/common/forgot_password_page.dart';
-import 'package:earthquake_damage_assessment/pages/victim/home_page.dart';
+import 'package:earthquake_damage_assessment/pages/victim/victim_home_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
 import 'package:flutter/material.dart';
-import '../helper/admin_home_page.dart';
+import '../helper/helper_home_page.dart';
 import 'sign_in_page.dart';
 
 final TextEditingController _mailController = TextEditingController();
@@ -160,6 +160,8 @@ Row notAMember(context) {
           ),
         ),
         onPressed: () {
+          _mailController.clear();
+          _passwordController.clear();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const SignInPage()),
@@ -205,13 +207,13 @@ Future<void> login(context) async {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  isHelper ? const AdminPage() : const HomePage()),
+                  isHelper ? const HelperHomePage() : const VictimHomePage()),
         );
         _mailController.clear();
         _passwordController.clear();
       }
-    }).catchError((e) {
-      showInvalidLoginDialog(context, e.message);
     });
+  }).catchError((e) {
+    showInvalidLoginDialog(context, e.message);
   });
 }

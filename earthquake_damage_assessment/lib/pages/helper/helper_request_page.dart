@@ -1,15 +1,15 @@
-import 'package:earthquake_damage_assessment/pages/helper/admin_profile_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/helper_profile_page.dart';
 import 'package:flutter/material.dart';
-import 'admin_home_page.dart';
+import 'helper_home_page.dart';
 
-class RequestTablePage extends StatefulWidget {
-  const RequestTablePage({super.key});
+class HelperRequestPage extends StatefulWidget {
+  const HelperRequestPage({super.key});
 
   @override
-  State<RequestTablePage> createState() => _RequestTablePageState();
+  State<HelperRequestPage> createState() => _HelperRequestPageState();
 }
 
-class _RequestTablePageState extends State<RequestTablePage> {
+class _HelperRequestPageState extends State<HelperRequestPage> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -19,13 +19,13 @@ class _RequestTablePageState extends State<RequestTablePage> {
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const AdminPage()),
+        MaterialPageRoute(builder: (context) => const HelperHomePage()),
       );
     }
     if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const AdminProfilePage()),
+        MaterialPageRoute(builder: (context) => const HelperProfilePage()),
       );
     }
   }

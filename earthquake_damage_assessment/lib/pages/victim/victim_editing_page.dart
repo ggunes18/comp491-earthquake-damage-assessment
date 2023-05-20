@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../common/phone_field.dart';
-import 'profile_page.dart';
-import 'package:earthquake_damage_assessment/pages/victim/edit_victim.dart';
+import 'victim_profile_page.dart';
+import 'package:earthquake_damage_assessment/pages/victim/victim_edit.dart';
 
 final TextEditingController _nameController = TextEditingController();
 final TextEditingController _locationController = TextEditingController();
@@ -13,14 +13,14 @@ final TextEditingController _emergencyPersonController =
 
 const bloodTypes = <String>['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', '0+', '0-'];
 
-class EditingPage extends StatefulWidget {
-  const EditingPage({Key? key}) : super(key: key);
+class VictimEditingPage extends StatefulWidget {
+  const VictimEditingPage({Key? key}) : super(key: key);
 
   @override
-  _EditingPageState createState() => _EditingPageState();
+  _VictimEditingPageState createState() => _VictimEditingPageState();
 }
 
-class _EditingPageState extends State<EditingPage> {
+class _VictimEditingPageState extends State<VictimEditingPage> {
   Widget bloodTypeBox() {
     return DropdownButton<String>(
       value: _bloodTypeController,
@@ -109,7 +109,7 @@ AppBar appBarButtons(context) {
             clearTextFields();
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
+              MaterialPageRoute(builder: (context) => VictimProfilePage()),
             );
           },
           color: Colors.black,
@@ -183,19 +183,47 @@ Padding phoneField(hintText, controller) {
   );
 }
 
-Future<void> savecredentials(
+void showInvalidFieldsDialog(BuildContext context, String errorText) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Missing information!"),
+        content: Text(errorText),
+        actions: [
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<bool> saveCredentials(
     context,
     TextEditingController nameController,
     TextEditingController locationController,
     TextEditingController phoneController,
     String bloodTypeController,
     TextEditingController emergencyPersonController) async {
-  await SaveService().save(
-      nameSurname: _nameController.text,
-      location: _locationController.text,
-      phone: _phoneController.text,
-      bloodType: _bloodTypeController,
-      emergencyPerson: _emergencyPersonController.text);
+  if (nameController.text != "" &&
+      locationController.text != "" &&
+      phoneController.text != "" &&
+      emergencyPersonController.text != "") {
+    await VictimSaveService().save(
+        nameSurname: _nameController.text,
+        location: _locationController.text,
+        phone: _phoneController.text,
+        bloodType: _bloodTypeController,
+        emergencyPerson: _emergencyPersonController.text);
+    return false;
+  } else {
+    return true;
+  }
 }
 
 TextButton submitButton(
@@ -207,14 +235,24 @@ TextButton submitButton(
   TextEditingController emergencyPersonController,
 ) {
   return TextButton(
-    onPressed: () {
-      savecredentials(context, nameController, locationController,
-          phoneController, bloodTypeController, emergencyPersonController);
-      clearTextFields();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
-      );
+    onPressed: () async {
+      bool ifError = await saveCredentials(
+          context,
+          nameController,
+          locationController,
+          phoneController,
+          bloodTypeController,
+          emergencyPersonController);
+      if (ifError == true) {
+        showInvalidFieldsDialog(
+            context, "Please make sure you provided every information!");
+      } else {
+        clearTextFields();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const VictimProfilePage()),
+        );
+      }
     },
     child: Container(
       height: 50,

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../common/phone_field.dart';
-import 'admin_profile_page.dart';
-import 'package:earthquake_damage_assessment/pages/helper/edit_helper.dart';
+import 'helper_profile_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/helper_edit.dart';
 import 'package:flutter/services.dart';
 
 final TextEditingController _nameController = TextEditingController();
 final TextEditingController _phoneController = TextEditingController();
 
-class AdminEditingPage extends StatelessWidget {
-  const AdminEditingPage({super.key});
+class HelperEditingPage extends StatelessWidget {
+  const HelperEditingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,8 @@ AppBar appBarButtons(context) {
             _phoneController.clear();
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AdminProfilePage()),
+              MaterialPageRoute(
+                  builder: (context) => const HelperProfilePage()),
             );
           },
           color: Colors.black,
@@ -133,26 +134,57 @@ Padding phoneField(hintText, controller) {
   );
 }
 
-Future<void> savecredentials(
+void showInvalidFieldsDialog(BuildContext context, String errorText) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Missing Information!'),
+        content: Text(errorText),
+        actions: [
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<bool> saveCredentials(
   context,
   TextEditingController nameController,
   TextEditingController phoneController,
 ) async {
-  await SaveService()
-      .save(nameSurname: _nameController.text, phone: _phoneController.text);
+  if (nameController.text != "" && phoneController.text != "") {
+    await HelperSaveService()
+        .save(nameSurname: _nameController.text, phone: _phoneController.text);
+    return false;
+  } else {
+    return true;
+  }
 }
 
 TextButton submitButton(context, TextEditingController nameController,
     TextEditingController phoneController) {
   return TextButton(
-    onPressed: () {
-      savecredentials(context, nameController, phoneController);
-      _nameController.clear();
-      _phoneController.clear();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const AdminProfilePage()),
-      );
+    onPressed: () async {
+      bool ifError =
+          await saveCredentials(context, nameController, phoneController);
+      if (ifError == true) {
+        showInvalidFieldsDialog(
+            context, "Please make sure you provided every information!");
+      } else {
+        _nameController.clear();
+        _phoneController.clear();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HelperProfilePage()),
+        );
+      }
     },
     child: Container(
       height: 50,

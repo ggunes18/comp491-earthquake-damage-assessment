@@ -1,19 +1,19 @@
 import 'dart:async';
+import 'package:earthquake_damage_assessment/service/location_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../service/location_services.dart';
-import 'admin_profile_page.dart';
-import 'request_table_page.dart';
+import 'helper_profile_page.dart';
+import 'helper_request_page.dart';
 
-class AdminPage extends StatefulWidget {
-  const AdminPage({super.key});
+class HelperHomePage extends StatefulWidget {
+  const HelperHomePage({super.key});
 
   @override
-  State<AdminPage> createState() => _AdminPageState();
+  State<HelperHomePage> createState() => _HelperHomePageState();
 }
 
-class _AdminPageState extends State<AdminPage> {
+class _HelperHomePageState extends State<HelperHomePage> {
   int _selectedIndex = 1;
 
   CameraPosition initialCameraPosition = CameraPosition(
@@ -33,13 +33,13 @@ class _AdminPageState extends State<AdminPage> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const RequestTablePage()),
+        MaterialPageRoute(builder: (context) => const HelperRequestPage()),
       );
     }
     if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const AdminProfilePage()),
+        MaterialPageRoute(builder: (context) => const HelperProfilePage()),
       );
     }
   }

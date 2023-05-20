@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:earthquake_damage_assessment/pages/helper/admin_home_page.dart';
-import 'package:earthquake_damage_assessment/pages/victim/home_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/helper_home_page.dart';
+import 'package:earthquake_damage_assessment/pages/victim/victim_home_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +60,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       home: isLogin
           ? isHelper
-              ? const AdminPage()
-              : const HomePage()
+              ? const HelperHomePage()
+              : const VictimHomePage()
           : const FirstPage(),
     );
   }

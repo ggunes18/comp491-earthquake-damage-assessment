@@ -1,9 +1,9 @@
-import 'package:earthquake_damage_assessment/pages/victim/editing_page.dart';
+import 'package:earthquake_damage_assessment/pages/victim/victim_editing_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'home_page.dart';
+import 'victim_home_page.dart';
 import '../../service/auth.dart';
 import '../common/login_page.dart';
 
@@ -47,14 +47,14 @@ class GetInfo {
   }
 }
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class VictimProfilePage extends StatefulWidget {
+  const VictimProfilePage({Key? key}) : super(key: key);
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _VictimProfilePageState createState() => _VictimProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _VictimProfilePageState extends State<VictimProfilePage> {
   final getInfo = GetInfo();
   late Future<Map<String, String>> fetchedData;
   int _selectedIndex = 1;
@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const VictimHomePage()),
       );
     }
   }
@@ -93,49 +93,63 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          logout(context);
+    return WillPopScope(
+        onWillPop: () async {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const VictimHomePage()),
+          );
+          return true;
         },
-        backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
-        child: const Icon(Icons.logout_outlined),
-      ),
-      appBar: appBarButtons(context),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+        child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              logout(context);
+            },
+            backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
+            child: const Icon(Icons.logout_outlined),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+          appBar: appBarButtons(context),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
+            currentIndex: 1,
+            selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
+            onTap: _onItemTapped,
           ),
-        ],
-        currentIndex: 1,
-        selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
-        onTap: _onItemTapped,
-      ),
-      body: FutureBuilder<Map<String, String>>(
-        future: fetchedData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          } else {
-            return body(snapshot.data!);
-          }
-        },
-      ),
-    );
+          body: FutureBuilder<Map<String, String>>(
+            future: fetchedData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text("Error: ${snapshot.error}"));
+              } else {
+                return body(snapshot.data!);
+              }
+            },
+          ),
+        ));
   }
 }
 
 AppBar appBarButtons(context) {
   return AppBar(
-    leading: const BackButton(
+    leading: BackButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const VictimHomePage()),
+        );
+      },
       color: Colors.black,
     ),
     backgroundColor: Colors.transparent,
@@ -145,7 +159,7 @@ AppBar appBarButtons(context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const EditingPage()),
+            MaterialPageRoute(builder: (context) => const VictimEditingPage()),
           );
         },
         icon: const Icon(Icons.edit),
@@ -299,6 +313,13 @@ Container requests() {
 
 Future<void> logout(context) async {
   await AuthService().signOut();
+  userName = "-";
+  mail = "-";
+  nameSurname = "-";
+  location = "-";
+  phone = "-";
+  bloodType = "-";
+  emergencyPerson = "-";
   Navigator.of(context).pushAndRemoveUntil(
     CupertinoPageRoute(builder: (context) => const LoginPage()),
     (_) => false,
