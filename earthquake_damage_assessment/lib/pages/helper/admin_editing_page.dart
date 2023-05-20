@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import '../common/phone_field.dart';
 import 'admin_profile_page.dart';
 import 'package:earthquake_damage_assessment/pages/helper/edit_helper.dart';
+import 'package:flutter/services.dart';
+
+final TextEditingController _nameController = TextEditingController();
+final TextEditingController _phoneController = TextEditingController();
 
 class AdminEditingPage extends StatelessWidget {
   const AdminEditingPage({super.key});
@@ -21,13 +26,9 @@ class AdminEditingPage extends StatelessWidget {
               textFields("Please enter your name and surname", _nameController),
               const SizedBox(height: 10),
               texts("Phone Number"),
-              textFields("Please enter your phone number", _phoneController),
+              phoneField("5xx-xxx-xxxx", _phoneController),
               const SizedBox(height: 10),
-              texts("Mail"),
-              textFields("Please enter your mail", _mailController),
-              const SizedBox(height: 10),
-              submitButton(
-                  context, _nameController, _phoneController, _mailController),
+              submitButton(context, _nameController, _phoneController),
             ],
           ),
         ),
@@ -35,10 +36,6 @@ class AdminEditingPage extends StatelessWidget {
     );
   }
 }
-
-final TextEditingController _nameController = TextEditingController();
-final TextEditingController _phoneController = TextEditingController();
-final TextEditingController _mailController = TextEditingController();
 
 Text editText() {
   return const Text(
@@ -52,11 +49,23 @@ Text editText() {
 
 AppBar appBarButtons(context) {
   return AppBar(
-    leading: const BackButton(
-      color: Colors.black,
-    ),
     backgroundColor: Colors.transparent,
     elevation: 0,
+    leading: Builder(
+      builder: (BuildContext context) {
+        return BackButton(
+          onPressed: () {
+            _nameController.clear();
+            _phoneController.clear();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AdminProfilePage()),
+            );
+          },
+          color: Colors.black,
+        );
+      },
+    ),
   );
 }
 
@@ -95,31 +104,51 @@ Padding textFields(hintText, controllerType) {
   );
 }
 
+Padding phoneField(hintText, controller) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+    child: TextFormField(
+      controller: controller,
+      keyboardType: TextInputType.phone,
+      autocorrect: false,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        PhoneInputFormatter(),
+      ],
+      decoration: InputDecoration(
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+        fillColor: const Color.fromARGB(255, 226, 226, 226),
+        filled: true,
+        hintText: hintText,
+      ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter a phone number';
+        }
+        return null;
+      },
+    ),
+  );
+}
+
 Future<void> savecredentials(
   context,
   TextEditingController nameController,
-  TextEditingController locationController,
-  TextEditingController biographyController,
+  TextEditingController phoneController,
 ) async {
-  await SaveService().save(
-      namesurname: _nameController.text,
-      phone: _phoneController.text,
-      mail: _mailController.text);
+  await SaveService()
+      .save(nameSurname: _nameController.text, phone: _phoneController.text);
 }
 
-TextButton submitButton(
-    context,
-    TextEditingController nameController,
-    TextEditingController phoneController,
-    TextEditingController mailController) {
+TextButton submitButton(context, TextEditingController nameController,
+    TextEditingController phoneController) {
   return TextButton(
     onPressed: () {
-      savecredentials(
-        context,
-        nameController,
-        phoneController,
-        mailController,
-      );
+      savecredentials(context, nameController, phoneController);
+      _nameController.clear();
+      _phoneController.clear();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const AdminProfilePage()),

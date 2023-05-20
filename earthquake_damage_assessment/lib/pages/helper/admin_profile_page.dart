@@ -6,31 +6,35 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'admin_home_page.dart';
 import '../../service/auth.dart';
 import '../common/login_page.dart';
-import 'admin_profile_edit.dart';
+import 'admin_editing_page.dart';
 
-String location = "Location";
-String namesurname = "Name Surname";
-String organization = "Organization";
+String nameSurname = "-";
+String organization = "-";
+String mail = "-";
+String phone = "-";
 
-class Save2 {
+class GetInfo {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
-  Future<Map<String, String>> save() async {
+
+  Future<Map<String, String>> getData() async {
     final currentUser = _firebaseAuth.currentUser;
     final docRef = _firestore.collection('UserTest').doc(currentUser?.uid);
     final docSnapshot = await docRef.get();
     final data = docSnapshot.data();
 
-    String fetchedLocation = data?['Location'] ?? "Location";
-    String fetchedNamesurname = data?['NameSurname'] ?? "Name Surname";
-    String fetchedOrganization = data?['organization'] ?? "Organization";
+    String fetchedNameSurname = data?['nameSurname'] ?? nameSurname;
+    String fetchedOrganization = data?['organization'] ?? organization;
+    String fetchedMail = data?['mail'] ?? mail;
+    String fetchedPhone = data?['phone'] ?? phone;
 
     return {
-      'location': fetchedLocation,
-      'namesurname': fetchedNamesurname,
+      'nameSurname': fetchedNameSurname,
       'organization': fetchedOrganization,
+      'mail': fetchedMail,
+      'phone': fetchedPhone,
     };
   }
 }
@@ -43,7 +47,7 @@ class AdminProfilePage extends StatefulWidget {
 }
 
 class _AdminProfilePageState extends State<AdminProfilePage> {
-  final save2 = Save2();
+  final getInfo = GetInfo();
   late Future<Map<String, String>> fetchedData;
   int _selectedIndex = 2;
 
@@ -73,12 +77,12 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
   }
 
   Future<Map<String, String>> fetchData() async {
-    Map<String, String> fetchedData = await save2.save();
+    Map<String, String> fetchedData = await getInfo.getData();
 
-    namesurname = fetchedData['namesurname']!;
-    location = fetchedData['location']!;
+    nameSurname = fetchedData['nameSurname']!;
+    mail = fetchedData['mail']!;
+    phone = fetchedData['phone']!;
     organization = fetchedData['organization']!;
-
     return fetchedData;
   }
 
@@ -158,16 +162,15 @@ ListView body(Map<String, String> data) {
       const SizedBox(
         height: 20,
       ),
-      nameText(data['namesurname']!),
-      locationText(data['location']!),
+      nameText(data['nameSurname']!),
       const SizedBox(
         height: 20,
       ),
+      generalInfoPhoneMail(data['phone']!, data['mail']!),
       const SizedBox(
-        height: 20,
+        height: 10,
       ),
-      generalInfoPhoneMail("phoneNum", "mail"),
-      generalInfoOrganization(organization),
+      generalInfoOrganization(data['organization']!),
       const SizedBox(
         height: 20,
       ),
@@ -189,8 +192,7 @@ CircleAvatar profilePhoto(String organization) {
   String initials =
       organization.isNotEmpty == true ? organization[0].toUpperCase() : '';
   return CircleAvatar(
-    backgroundColor: const Color.fromRGBO(
-        199, 0, 56, 0.89), // Set the background color of the avatar
+    backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
     radius: 120,
     child: Text(
       initials,
@@ -209,18 +211,6 @@ Center nameText(String namesurname) {
       style: const TextStyle(
         color: Colors.black,
         fontSize: 20,
-      ),
-    ),
-  );
-}
-
-Center locationText(String location) {
-  return Center(
-    child: Text(
-      location,
-      style: const TextStyle(
-        color: Colors.black,
-        fontSize: 15,
       ),
     ),
   );

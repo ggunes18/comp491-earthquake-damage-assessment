@@ -211,7 +211,7 @@ Future<void> login(context) async {
         _passwordController.clear();
       }
     }).catchError((e) {
-      showInvalidSigninDialog(context, e.message);
+      showInvalidLoginDialog(context, e.message);
     });
   });
 }

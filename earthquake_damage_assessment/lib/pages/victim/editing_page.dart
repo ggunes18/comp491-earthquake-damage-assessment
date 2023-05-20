@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../common/phone_field.dart';
 import 'profile_page.dart';
 import 'package:earthquake_damage_assessment/pages/victim/edit_victim.dart';
 
@@ -63,13 +65,13 @@ class _EditingPageState extends State<EditingPage> {
                   _locationController),
               const SizedBox(height: 10),
               texts("Phone Number"),
-              textFields("(5xx)xxxxxxx", _phoneController),
+              phoneField("5xx-xxx-xxxx", _phoneController),
               const SizedBox(height: 10),
               texts("Blood Type"),
               bloodTypeBox(),
               const SizedBox(height: 10),
               texts("Emergency Person Number"),
-              textFields("(5xx)xxxxxxx", _emergencyPersonController),
+              phoneField("5xx-xxx-xxxx", _emergencyPersonController),
               const SizedBox(height: 10),
               submitButton(
                   context,
@@ -148,6 +150,35 @@ Padding textFields(hintText, controllerType) {
         filled: true,
         hintText: hintText,
       ),
+    ),
+  );
+}
+
+Padding phoneField(hintText, controller) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+    child: TextFormField(
+      controller: controller,
+      keyboardType: TextInputType.phone,
+      autocorrect: false,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        PhoneInputFormatter(),
+      ],
+      decoration: InputDecoration(
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+        fillColor: const Color.fromARGB(255, 226, 226, 226),
+        filled: true,
+        hintText: hintText,
+      ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter a phone number';
+        }
+        return null;
+      },
     ),
   );
 }
