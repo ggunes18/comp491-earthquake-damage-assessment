@@ -21,12 +21,11 @@ class GetInfo {
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<Map<String, String>> getInfo() async {
+  Future<Map<String, String>> getData() async {
     final currentUser = _firebaseAuth.currentUser;
     final docRef = _firestore.collection('UserTest').doc(currentUser?.uid);
     final docSnapshot = await docRef.get();
     final data = docSnapshot.data();
-    print(data);
 
     String fetchedUserName = data?['userName'] ?? userName;
     String fetchedMail = data?['mail'] ?? mail;
@@ -79,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<Map<String, String>> fetchData() async {
-    Map<String, String> fetchedData = await getInfo.getInfo();
+    Map<String, String> fetchedData = await getInfo.getData();
 
     userName = fetchedData['userName']!;
     mail = fetchedData['mail']!;

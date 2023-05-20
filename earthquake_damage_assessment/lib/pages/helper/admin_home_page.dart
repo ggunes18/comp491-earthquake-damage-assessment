@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import '../../service/location_services.dart';
 import 'admin_profile_page.dart';
 import 'request_table_page.dart';
 
@@ -13,6 +15,15 @@ class AdminPage extends StatefulWidget {
 
 class _AdminPageState extends State<AdminPage> {
   int _selectedIndex = 1;
+
+  CameraPosition initialCameraPosition = CameraPosition(
+    target: LatLng(41.2054283, 29.07241),
+    zoom: 14,
+  );
+
+  late GoogleMapController mapController;
+  Set<Marker> markers = {};
+  final Completer<GoogleMapController> _controllerCompleter = Completer();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -33,39 +44,26 @@ class _AdminPageState extends State<AdminPage> {
     }
   }
 
-  static const CameraPosition initialCameraPosition = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14,
-  );
+  @override
+  void initState() {
+    super.initState();
+    getLocation();
+  }
 
-  late GoogleMapController mapController;
-  Set<Marker> markers = {};
+  void getLocation() async {
+    Position position = await LocationService().getUserCurrentLocation();
+    setState(() {
+      initialCameraPosition = CameraPosition(
+        target: LatLng(position.latitude, position.longitude),
+        zoom: 15,
+      );
+    });
 
-  Future<Position> getUserCurrentLocation() async {
-    bool serviceEnables;
-    LocationPermission permission;
-
-    serviceEnables = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnables) {
-      return Future.error('Location services are disabled.');
+    if (_controllerCompleter.isCompleted) {
+      mapController.moveCamera(
+        CameraUpdate.newCameraPosition(initialCameraPosition),
+      );
     }
-
-    permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    Position position = await Geolocator.getCurrentPosition();
-    return position;
   }
 
   @override
@@ -135,29 +133,30 @@ class _AdminPageState extends State<AdminPage> {
                         Positioned(
                           bottom: 20,
                           left: 20,
-                          child: FloatingActionButton.extended(
+                          child: FloatingActionButton(
                               onPressed: () async {
-                                Position position =
-                                    await getUserCurrentLocation();
-                                mapController.animateCamera(
-                                  CameraUpdate.newCameraPosition(
-                                    CameraPosition(
-                                      target: LatLng(position.latitude,
-                                          position.longitude),
-                                      zoom: 15,
-                                    ),
-                                  ),
-                                );
-                                markers.clear();
-                                markers.add(Marker(
+                                Position position = await LocationService()
+                                    .getUserCurrentLocation();
+                                setState(() {
+                                  initialCameraPosition = CameraPosition(
+                                    target: LatLng(
+                                        position.latitude, position.longitude),
+                                    zoom: 15,
+                                  );
+                                  mapController.moveCamera(
+                                    CameraUpdate.newCameraPosition(
+                                        initialCameraPosition),
+                                  );
+                                  markers.clear();
+                                  markers.add(Marker(
                                     markerId:
                                         const MarkerId("Current Location"),
-                                    position: LatLng(position.latitude,
-                                        position.longitude)));
-                                setState(() {});
+                                    position: LatLng(
+                                        position.latitude, position.longitude),
+                                  ));
+                                });
                               },
-                              label: const Text('Locate me'),
-                              icon: const Icon(Icons.location_searching),
+                              child: const Icon(Icons.location_searching),
                               hoverColor: Colors.white,
                               backgroundColor:
                                   const Color.fromRGBO(199, 0, 56, 0.89)),

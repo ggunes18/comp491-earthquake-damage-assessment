@@ -48,6 +48,7 @@ dependencies:
   geolocator: ^9.0.2
   flutter_rating_bar: ^4.0.1
   shared_preferences: ^2.1.1
+  flutter_multi_formatter: ^2.11.0
 
 dev_dependencies:
   flutter_test:

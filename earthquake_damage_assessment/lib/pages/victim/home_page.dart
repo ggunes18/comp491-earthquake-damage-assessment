@@ -158,8 +158,6 @@ class _HomePageState extends State<HomePage> {
                                       CameraUpdate.newCameraPosition(
                                           initialCameraPosition),
                                     );
-                                    print("konum");
-                                    print(initialCameraPosition);
                                     markers.clear();
                                     markers.add(Marker(
                                       markerId:
