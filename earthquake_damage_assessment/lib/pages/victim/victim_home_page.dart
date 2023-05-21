@@ -406,7 +406,7 @@ class LocationSearch extends SearchDelegate<SafeLocation> {
       );
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (selectedLocation != null) {
         close(context, selectedLocation);
       } else {
