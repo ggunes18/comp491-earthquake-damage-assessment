@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:earthquake_damage_assessment/service/location_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -142,15 +143,31 @@ RatingBar ratingBar() {
 TextButton submitButton(context, requestType) {
   return TextButton(
     onPressed: () {
-      Get.defaultDialog(
-          title: "Are your sure about request information?",
-          middleText:
-              "Your name: ${_nameController.text}\n Your location: ${globalLatitude.toString()}, ${globalLongitude.toString()}\n Your needs: ${_needsController.text}\n Extra information: ${_infoController.text}\n Emergency level: $emergencyLevel\n",
-          textConfirm: "Yes",
-          textCancel: "Edit request",
-          onConfirm: () {
-            addRequest(context, requestType);
-          });
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Are your sure about request information?"),
+            content: Text(
+              "Your name: ${_nameController.text}\nYour location: ${globalLatitude.toString()}, ${globalLongitude.toString()}\nYour directions: ${_directionsController.text}\nYour needs: ${_needsController.text}\nSecond person to be reached: ${_secondPersonController.text}\nExtra information: ${_infoController.text}\nEmergency level: $emergencyLevel\n",
+            ),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  addRequest(context, requestType);
+                },
+              ),
+              TextButton(
+                child: const Text('Edit Request'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     },
     child: Container(
       height: 50,
@@ -168,28 +185,44 @@ TextButton submitButton(context, requestType) {
 }
 
 Future<void> addRequest(context, requestType) async {
-  await FirebaseFirestore.instance.collection("RequestTest").add({
+  var firestore = FirebaseFirestore.instance;
+  await firestore.collection("RequestTest").add({
     "type": requestType,
     "name": _nameController.text,
     "location": "${globalLatitude.toString()}, ${globalLongitude.toString()}",
-    "directions": _directionsController,
+    "directions": _directionsController.text,
     "need": _needsController.text,
     "info": _infoController.text,
-    "secondPerson": _secondPersonController,
-    "emergency": emergencyLevel
+    "secondPerson": _secondPersonController.text,
+    "emergency": emergencyLevel,
+    "status": "received",
+    "userID": firestore
+        .collection('UserTest')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
   });
-  Get.defaultDialog(
-    title: "Your request is saved.",
-    content: Container(),
-    textConfirm: "OK",
-    onConfirm: () {
-      _nameController.text = "";
-      _needsController.text = "";
-      _infoController.text = "";
-      emergencyLevel = 0;
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const VictimHomePage()),
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Your request is saved!'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              requestType = "";
+              _directionsController.text = "";
+              _nameController.text = "";
+              _needsController.text = "";
+              _infoController.text = "";
+              _secondPersonController.text = "";
+              emergencyLevel = 0;
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const VictimHomePage()),
+              );
+            },
+          )
+        ],
       );
     },
   );

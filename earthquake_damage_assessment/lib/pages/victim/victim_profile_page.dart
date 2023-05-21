@@ -24,6 +24,8 @@ class GetInfo {
   Future<Map<String, String>> getData() async {
     final currentUser = _firebaseAuth.currentUser;
     final docRef = _firestore.collection('UserTest').doc(currentUser?.uid);
+    print("docRef");
+    print(docRef);
     final docSnapshot = await docRef.get();
     final data = docSnapshot.data();
 
@@ -306,7 +308,7 @@ Container requests() {
   return Container(
     child: Column(children: const [
       Text("Request 1 - (Request Type)"),
-      Text("Adress"),
+      Text("Status"),
     ]),
   );
 }
