@@ -7,6 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'victim_profile_page.dart';
 import 'package:geolocator/geolocator.dart';
 
+final TextEditingController _searchController = TextEditingController();
+
 class VictimHomePage extends StatefulWidget {
   const VictimHomePage({super.key});
 
@@ -38,15 +40,14 @@ class _VictimHomePageState extends State<VictimHomePage> {
     }
   }
 
-  // Markers for Safe Locations
-  List<Marker> marker = [];
-  final List<Marker> list = [
+  final List<Marker> marker = [
     Marker(
       markerId: MarkerId("1"),
       position: LatLng(41.206862, 29.072034),
       infoWindow: InfoWindow(
         title: "Safe Location",
       ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     ),
     Marker(
       markerId: MarkerId("2"),
@@ -56,13 +57,12 @@ class _VictimHomePageState extends State<VictimHomePage> {
       ),
     )
   ];
-  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     getLocation();
-    marker.addAll(list);
+    markers.addAll(marker);
   }
 
   void getLocation() async {
@@ -288,40 +288,6 @@ class _VictimHomePageState extends State<VictimHomePage> {
   }
 }
 
-// Function to create a marker
-Marker createMarker(double latitude, double longitude, int emergencyLevel) {
-  // Determine the hue based on the emergency level
-  double markerHue;
-  switch (emergencyLevel) {
-    case 1:
-      markerHue = BitmapDescriptor.hueGreen;
-      break;
-    case 2:
-      markerHue = BitmapDescriptor.hueYellow;
-      break;
-    case 3:
-      markerHue = BitmapDescriptor.hueOrange;
-      break;
-    case 4:
-      markerHue = BitmapDescriptor.hueRose;
-      break;
-    case 5:
-      markerHue = BitmapDescriptor.hueRed;
-      break;
-    default:
-      markerHue = BitmapDescriptor.hueBlue;
-  }
-
-  // Create a marker
-  var marker = Marker(
-    markerId: MarkerId('marker_${latitude}_${longitude}'),
-    position: LatLng(latitude, longitude),
-    icon: BitmapDescriptor.defaultMarkerWithHue(markerHue),
-  );
-
-  return marker;
-}
-
 class SafeLocation {
   final String name;
   final LatLng coordinates;
@@ -360,7 +326,7 @@ class LocationSearch extends SearchDelegate<SafeLocation> {
         progress: transitionAnimation,
       ),
       onPressed: () {
-        close(context, null);
+        //close(context, null);
       },
     );
   }
