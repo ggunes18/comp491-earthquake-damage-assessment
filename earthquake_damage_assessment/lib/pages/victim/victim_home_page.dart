@@ -16,6 +16,10 @@ class VictimHomePage extends StatefulWidget {
   State<VictimHomePage> createState() => _VictimHomePageState();
 }
 
+late GoogleMapController mapController;
+Set<Marker> markers = {};
+final Completer<GoogleMapController> _controllerCompleter = Completer();
+
 class _VictimHomePageState extends State<VictimHomePage> {
   int _selectedIndex = 0;
 
@@ -23,10 +27,6 @@ class _VictimHomePageState extends State<VictimHomePage> {
     target: LatLng(41.2054283, 29.07241),
     zoom: 15,
   );
-
-  late GoogleMapController mapController;
-  Set<Marker> markers = {};
-  final Completer<GoogleMapController> _controllerCompleter = Completer();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -326,7 +326,7 @@ class LocationSearch extends SearchDelegate<SafeLocation> {
         progress: transitionAnimation,
       ),
       onPressed: () {
-        //close(context, null);
+        Navigator.pop(context);
       },
     );
   }
@@ -347,8 +347,12 @@ class LocationSearch extends SearchDelegate<SafeLocation> {
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
         onTap: () {
-          showResults(context);
+          // Move the camera to the selected location
+          mapController.moveCamera(
+            CameraUpdate.newLatLng(suggestionsList[index].coordinates),
+          );
           query = suggestionsList[index].name;
+          close(context, suggestionsList[index]);
         },
         title: Text(suggestionsList[index].name),
       ),
