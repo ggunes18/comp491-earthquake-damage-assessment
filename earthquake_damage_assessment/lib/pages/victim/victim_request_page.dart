@@ -189,7 +189,7 @@ Future<void> addRequest(context, requestType) async {
   await firestore.collection("RequestTest").add({
     "type": requestType,
     "name": _nameController.text,
-    "location": "${globalLatitude.toString()}, ${globalLongitude.toString()}",
+    "location": GeoPoint(globalLatitude, globalLongitude),
     "directions": _directionsController.text,
     "need": _needsController.text,
     "info": _infoController.text,

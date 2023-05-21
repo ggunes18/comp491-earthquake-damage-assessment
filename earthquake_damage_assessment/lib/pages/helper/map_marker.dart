@@ -1,9 +1,7 @@
-// Function to create a marker
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 Marker createMarker(
     double latitude, double longitude, int emergencyLevel, String userName) {
-  // Determine the hue based on the emergency level
   double markerHue;
   switch (emergencyLevel) {
     case 1:

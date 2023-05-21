@@ -401,19 +401,18 @@ class LocationSearch extends SearchDelegate<SafeLocation> {
     );
 
     if (selectedLocation != null) {
-      // Move the camera to the selected location
       mapController.animateCamera(
         CameraUpdate.newLatLng(selectedLocation.coordinates),
       );
     }
 
-    // Close the search delegate
-    // Close the search delegate
-    if (selectedLocation != null) {
-      close(context, selectedLocation);
-    } else {
-      close(context, SafeLocation('', LatLng(0, 0)));
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (selectedLocation != null) {
+        close(context, selectedLocation);
+      } else {
+        close(context, SafeLocation('', const LatLng(0, 0)));
+      }
+    });
     return Container();
   }
 }

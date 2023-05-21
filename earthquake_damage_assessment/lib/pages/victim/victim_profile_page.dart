@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../service/request_data.dart';
 import 'victim_home_page.dart';
 import '../../service/auth.dart';
 import '../common/login_page.dart';
@@ -24,8 +25,6 @@ class GetInfo {
   Future<Map<String, String>> getData() async {
     final currentUser = _firebaseAuth.currentUser;
     final docRef = _firestore.collection('UserTest').doc(currentUser?.uid);
-    print("docRef");
-    print(docRef);
     final docSnapshot = await docRef.get();
     final data = docSnapshot.data();
 
@@ -205,7 +204,18 @@ ListView body(Map<String, String> data) {
       const SizedBox(
         height: 20,
       ),
-      requests(),
+      FutureBuilder<Container>(
+        future: requestsTable(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return snapshot.data!;
+          }
+        },
+      ),
     ],
   );
 }
@@ -304,12 +314,42 @@ Row generalInfoBloodSeconPerson(bloodType, secondPerson) {
   );
 }
 
-Container requests() {
+Future<Container> requestsTable() async {
+  final List<VictimRequest> requestList = await getRequestVictim();
+
   return Container(
-    child: Column(children: const [
-      Text("Request 1 - (Request Type)"),
-      Text("Status"),
-    ]),
+    child: DataTable(
+      columns: const [
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Request',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Type',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Status',
+          textAlign: TextAlign.center,
+        ))),
+      ],
+      rows: requestList.map((request) {
+        final index = requestList.indexOf(request) + 1;
+        return DataRow(
+          cells: [
+            DataCell(Center(child: Text('Request $index'))),
+            DataCell(Center(child: Text(request.type))),
+            DataCell(Center(child: Text(request.status))),
+          ],
+        );
+      }).toList(),
+    ),
   );
 }
 
