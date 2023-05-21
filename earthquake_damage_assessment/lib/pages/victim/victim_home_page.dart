@@ -38,10 +38,31 @@ class _VictimHomePageState extends State<VictimHomePage> {
     }
   }
 
+  // Markers for Safe Locations
+  List<Marker> marker = [];
+  final List<Marker> list = [
+    Marker(
+      markerId: MarkerId("1"),
+      position: LatLng(41.206862, 29.072034),
+      infoWindow: InfoWindow(
+        title: "Safe Location",
+      ),
+    ),
+    Marker(
+      markerId: MarkerId("2"),
+      position: LatLng(41.2054283, 29.07240),
+      infoWindow: InfoWindow(
+        title: "Safe Location 2",
+      ),
+    )
+  ];
+  TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     getLocation();
+    marker.addAll(list);
   }
 
   void getLocation() async {
@@ -109,6 +130,37 @@ class _VictimHomePageState extends State<VictimHomePage> {
                     const SizedBox(height: 20),
 
                     // search bar
+
+                    TextField(
+                      readOnly: false, // Makes the field uneditable
+                      controller: _searchController,
+                      onTap: () async {
+                        // Open the search bar and await the result
+                        final result = await showSearch<SafeLocation>(
+                          context: context,
+                          delegate: LocationSearch(safeLocations),
+                        );
+
+                        if (result != null) {
+                          // The user has selected a location, update the text field and move the camera
+                          _searchController.text = result.name;
+                          mapController.animateCamera(
+                              CameraUpdate.newLatLng(result.coordinates));
+                        }
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        hintText: "Search for Safe Location",
+                        prefixIcon: const Icon(Icons.search),
+                        prefixIconColor: Colors.grey[600],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    /*
                     TextField(
                       decoration: InputDecoration(
                         filled: true,
@@ -122,7 +174,10 @@ class _VictimHomePageState extends State<VictimHomePage> {
                         ),
                       ),
                     ),
+                    */
                     const SizedBox(height: 20),
+
+                    //Google Map Api
                     Container(
                       height: 450,
                       width: screenWidth,
@@ -229,6 +284,109 @@ class _VictimHomePageState extends State<VictimHomePage> {
               )
             ]),
           )),
+    );
+  }
+}
+
+// Function to create a marker
+Marker createMarker(double latitude, double longitude, int emergencyLevel) {
+  // Determine the hue based on the emergency level
+  double markerHue;
+  switch (emergencyLevel) {
+    case 1:
+      markerHue = BitmapDescriptor.hueGreen;
+      break;
+    case 2:
+      markerHue = BitmapDescriptor.hueYellow;
+      break;
+    case 3:
+      markerHue = BitmapDescriptor.hueOrange;
+      break;
+    case 4:
+      markerHue = BitmapDescriptor.hueRose;
+      break;
+    case 5:
+      markerHue = BitmapDescriptor.hueRed;
+      break;
+    default:
+      markerHue = BitmapDescriptor.hueBlue;
+  }
+
+  // Create a marker
+  var marker = Marker(
+    markerId: MarkerId('marker_${latitude}_${longitude}'),
+    position: LatLng(latitude, longitude),
+    icon: BitmapDescriptor.defaultMarkerWithHue(markerHue),
+  );
+
+  return marker;
+}
+
+class SafeLocation {
+  final String name;
+  final LatLng coordinates;
+
+  SafeLocation(this.name, this.coordinates);
+}
+
+List<SafeLocation> safeLocations = [
+  SafeLocation('Location 1', LatLng(40.712776, -74.005974)),
+  SafeLocation('Location 2', LatLng(34.052235, -118.243683)),
+  // Add more locations as needed...
+];
+
+class LocationSearch extends SearchDelegate<SafeLocation> {
+  final List<SafeLocation> safeLocations;
+
+  LocationSearch(this.safeLocations);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return ListTile(
+      title: Text(query),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionsList = query.isEmpty
+        ? safeLocations
+        : safeLocations.where((p) => p.name.startsWith(query)).toList();
+
+    return ListView.builder(
+      itemBuilder: (context, index) => ListTile(
+        onTap: () {
+          showResults(context);
+          query = suggestionsList[index].name;
+        },
+        title: Text(suggestionsList[index].name),
+      ),
+      itemCount: suggestionsList.length,
     );
   }
 }
