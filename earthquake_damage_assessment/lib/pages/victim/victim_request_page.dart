@@ -7,6 +7,8 @@ import 'victim_home_page.dart';
 
 final TextEditingController _nameController = TextEditingController();
 final TextEditingController _needsController = TextEditingController();
+final TextEditingController _directionsController = TextEditingController();
+final TextEditingController _secondPersonController = TextEditingController();
 final TextEditingController _infoController = TextEditingController();
 double emergencyLevel = 0;
 
@@ -47,11 +49,11 @@ class VictimRequestPage extends StatelessWidget {
                   "If you need anything write it here.", _needsController),
               const SizedBox(height: 10),
               texts("Directions"),
-              textFields("Enter the directions", _needsController),
+              textFields("Enter the directions", _directionsController),
               const SizedBox(height: 10),
               texts("Second person to be reached"),
               textFields("Second person to be reached in an emergency",
-                  _needsController),
+                  _secondPersonController),
               const SizedBox(height: 10),
               texts("Extra Information"),
               textFields(
@@ -170,8 +172,10 @@ Future<void> addRequest(context, requestType) async {
     "type": requestType,
     "name": _nameController.text,
     "location": "${globalLatitude.toString()}, ${globalLongitude.toString()}",
+    "directions": _directionsController,
     "need": _needsController.text,
     "info": _infoController.text,
+    "secondPerson": _secondPersonController,
     "emergency": emergencyLevel
   });
   Get.defaultDialog(
