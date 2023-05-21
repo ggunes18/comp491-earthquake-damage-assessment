@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'victim_profile_page.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:collection/collection.dart';
 
 final TextEditingController _searchController = TextEditingController();
 
@@ -45,7 +46,7 @@ class _VictimHomePageState extends State<VictimHomePage> {
       markerId: MarkerId("1"),
       position: LatLng(41.206862, 29.072034),
       infoWindow: InfoWindow(
-        title: "Safe Location",
+        title: "Safe Location 1",
       ),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     ),
@@ -55,7 +56,16 @@ class _VictimHomePageState extends State<VictimHomePage> {
       infoWindow: InfoWindow(
         title: "Safe Location 2",
       ),
-    )
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("3"),
+      position: LatLng(41.0848, 29.0510),
+      infoWindow: InfoWindow(
+        title: "Safe Location 3",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
   ];
 
   @override
@@ -132,8 +142,18 @@ class _VictimHomePageState extends State<VictimHomePage> {
                     // search bar
 
                     TextField(
-                      readOnly: false, // Makes the field uneditable
+                      readOnly: false,
                       controller: _searchController,
+                      onChanged: (value) async {
+                        final selectedLocation = await showSearch(
+                          context: context,
+                          delegate: LocationSearch(safeLocations),
+                          query: _searchController.text,
+                        );
+                        if (selectedLocation != null) {
+                          _searchController.text = selectedLocation.name;
+                        }
+                      },
                       onTap: () async {
                         // Open the search bar and await the result
                         final result = await showSearch<SafeLocation>(
@@ -160,21 +180,7 @@ class _VictimHomePageState extends State<VictimHomePage> {
                         ),
                       ),
                     ),
-                    /*
-                    TextField(
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        hintText: "Search for Safe Location",
-                        prefixIcon: const Icon(Icons.search),
-                        prefixIconColor: Colors.grey[600],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    */
+
                     const SizedBox(height: 20),
 
                     //Google Map Api
@@ -296,8 +302,9 @@ class SafeLocation {
 }
 
 List<SafeLocation> safeLocations = [
-  SafeLocation('Location 1', LatLng(40.712776, -74.005974)),
-  SafeLocation('Location 2', LatLng(34.052235, -118.243683)),
+  SafeLocation('Safe Location 1', LatLng(41.206862, 29.072034)),
+  SafeLocation('Safe Location 2', LatLng(41.2054283, 29.07240)),
+  SafeLocation('Safe Location 3', LatLng(41.0848, 29.0510)),
   // Add more locations as needed...
 ];
 
@@ -313,6 +320,8 @@ class LocationSearch extends SearchDelegate<SafeLocation> {
         icon: Icon(Icons.clear),
         onPressed: () {
           query = '';
+          Navigator.pop(context);
+          _searchController.clear();
         },
       ),
     ];
@@ -327,14 +336,9 @@ class LocationSearch extends SearchDelegate<SafeLocation> {
       ),
       onPressed: () {
         Navigator.pop(context);
+        query = '';
+        _searchController.clear();
       },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return ListTile(
-      title: Text(query),
     );
   }
 
@@ -342,21 +346,74 @@ class LocationSearch extends SearchDelegate<SafeLocation> {
   Widget buildSuggestions(BuildContext context) {
     final suggestionsList = query.isEmpty
         ? safeLocations
-        : safeLocations.where((p) => p.name.startsWith(query)).toList();
+        : safeLocations
+            .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
 
     return ListView.builder(
-      itemBuilder: (context, index) => ListTile(
-        onTap: () {
-          // Move the camera to the selected location
-          mapController.moveCamera(
-            CameraUpdate.newLatLng(suggestionsList[index].coordinates),
-          );
-          query = suggestionsList[index].name;
-          close(context, suggestionsList[index]);
-        },
-        title: Text(suggestionsList[index].name),
-      ),
+      itemBuilder: (context, index) {
+        final String name = suggestionsList[index].name;
+        final String nameLowercase = name.toLowerCase();
+        final String queryLowercase = query.toLowerCase();
+
+        final int queryIndex = nameLowercase.indexOf(queryLowercase);
+        return ListTile(
+          onTap: () {
+            // Move the camera to the selected location
+            mapController.moveCamera(
+              CameraUpdate.newLatLng(suggestionsList[index].coordinates),
+            );
+            query = suggestionsList[index].name;
+            showResults(context);
+          },
+          title: queryIndex == -1
+              ? Text(name)
+              : RichText(
+                  text: TextSpan(
+                    text: name.substring(0, queryIndex),
+                    style: TextStyle(color: Colors.grey),
+                    children: [
+                      TextSpan(
+                        text: name.substring(
+                            queryIndex, queryIndex + queryLowercase.length),
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text:
+                            name.substring(queryIndex + queryLowercase.length),
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+        );
+      },
       itemCount: suggestionsList.length,
     );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // Find the selected location
+    final SafeLocation? selectedLocation = safeLocations.firstWhereOrNull(
+      (location) => location.name.toLowerCase() == query.toLowerCase(),
+    );
+
+    if (selectedLocation != null) {
+      // Move the camera to the selected location
+      mapController.animateCamera(
+        CameraUpdate.newLatLng(selectedLocation.coordinates),
+      );
+    }
+
+    // Close the search delegate
+    // Close the search delegate
+    if (selectedLocation != null) {
+      close(context, selectedLocation);
+    } else {
+      close(context, SafeLocation('', LatLng(0, 0)));
+    }
+    return Container();
   }
 }
