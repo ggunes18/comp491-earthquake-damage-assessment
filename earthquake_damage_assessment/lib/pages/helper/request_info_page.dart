@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RequestInformationPage extends StatelessWidget {
-  const RequestInformationPage({super.key});
+  RequestInformationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class RequestInformationPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: Row(
-                children: const [
+                children: [
                   Text(
                     "Request Information Page",
                     style: TextStyle(
@@ -30,9 +30,11 @@ class RequestInformationPage extends StatelessWidget {
             const SizedBox(height: 20),
             texts("Urgency: 5/5"),
             const SizedBox(height: 20),
-            texts("Location"),
+            texts("Direction"),
             const SizedBox(height: 20),
             texts("Needs"),
+            const SizedBox(height: 20),
+            texts("Request's second person to be reached"),
             const SizedBox(height: 20),
             texts("Username"),
             const SizedBox(height: 20),
@@ -40,7 +42,7 @@ class RequestInformationPage extends StatelessWidget {
             const SizedBox(height: 20),
             texts("Mail"),
             const SizedBox(height: 20),
-            texts("Emergency Phone Number"),
+            texts("User's Emergency Phone Number"),
             const SizedBox(height: 20),
           ]),
         )));
@@ -50,7 +52,7 @@ class RequestInformationPage extends StatelessWidget {
 Text titleText(title) {
   return Text(
     title,
-    style: const TextStyle(
+    style: TextStyle(
       color: Color.fromRGBO(199, 0, 56, 0.89),
       fontSize: 20,
     ),
@@ -60,7 +62,7 @@ Text titleText(title) {
 Text texts(input) {
   return Text(
     input,
-    style: const TextStyle(
+    style: TextStyle(
       color: Colors.black,
       fontSize: 15,
     ),
@@ -69,7 +71,7 @@ Text texts(input) {
 
 AppBar appBarButtons(context) {
   return AppBar(
-    leading: const BackButton(
+    leading: BackButton(
       color: Colors.black,
     ),
     backgroundColor: Colors.transparent,

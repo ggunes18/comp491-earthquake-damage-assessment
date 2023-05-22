@@ -1,6 +1,7 @@
 import 'package:earthquake_damage_assessment/pages/helper/helper_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'helper_home_page.dart';
+import 'request_info_page.dart';
 
 class HelperRequestPage extends StatefulWidget {
   const HelperRequestPage({super.key});
@@ -61,7 +62,7 @@ class _HelperRequestPageState extends State<HelperRequestPage> {
                   child: Column(
                     children: [
                       Row(
-                        children: const [
+                        children: [
                           Text(
                             "KuHelp - Request Page",
                             style: TextStyle(
@@ -73,22 +74,30 @@ class _HelperRequestPageState extends State<HelperRequestPage> {
                         ],
                       ),
                       Container(
-                        child: DataTable(
-                            showCheckboxColumn: false,
-                            columns: const [
-                              DataColumn(label: Text('Type')),
-                              DataColumn(label: Text('Place')),
-                              DataColumn(label: Text('Urgeny')),
+                        child: DataTable(showCheckboxColumn: false, columns: [
+                          DataColumn(label: Text('Type')),
+                          DataColumn(label: Text('Place')),
+                          DataColumn(label: Text('Urgeny')),
+                          DataColumn(label: Text('Username')),
+                        ], rows: [
+                          //row 1
+                          DataRow(
+                            cells: [
+                              DataCell(Text('Name')),
+                              DataCell(Text('Place1')),
+                              DataCell(Text('Urgency Level')),
+                              DataCell(Text('Username')),
                             ],
-                            rows: const [
-                              DataRow(
-                                cells: [
-                                  DataCell(Text('Name')),
-                                  DataCell(Text('Place1')),
-                                  DataCell(Text('Urgency Level')),
-                                ],
-                              ),
-                            ]),
+                            onSelectChanged: (newValue) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        RequestInformationPage()),
+                              );
+                            },
+                          ),
+                        ]),
                       )
                     ],
                   ))
