@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'helper_profile_page.dart';
 import 'helper_request_page.dart';
+import 'request_info_page.dart';
 
 class HelperHomePage extends StatefulWidget {
   const HelperHomePage({super.key});
