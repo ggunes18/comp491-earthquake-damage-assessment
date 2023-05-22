@@ -43,7 +43,8 @@ class RequestInformationPage extends StatelessWidget {
             texts("Mail"),
             const SizedBox(height: 20),
             texts("User's Emergency Phone Number"),
-            const SizedBox(height: 20),
+            const SizedBox(height: 50),
+            helpSentButton(),
           ]),
         )));
   }
@@ -65,6 +66,23 @@ Text texts(input) {
     style: TextStyle(
       color: Colors.black,
       fontSize: 15,
+    ),
+  );
+}
+
+TextButton helpSentButton() {
+  return TextButton(
+    onPressed: () {},
+    style: TextButton.styleFrom(
+        backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ) // Background Color
+        ),
+    child: Text(
+      "Help Sent",
+      style: const TextStyle(
+          fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
     ),
   );
 }
