@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:earthquake_damage_assessment/pages/helper/helper_profile_page.dart';
+import 'package:earthquake_damage_assessment/service/request_data.dart';
 import 'package:flutter/material.dart';
 import 'helper_home_page.dart';
 import 'request_info_page.dart';
@@ -73,36 +75,50 @@ class _HelperRequestPageState extends State<HelperRequestPage> {
                           )
                         ],
                       ),
-                      Container(
-                        child: DataTable(showCheckboxColumn: false, columns: [
-                          DataColumn(label: Text('Type')),
-                          DataColumn(label: Text('Place')),
-                          DataColumn(label: Text('Urgeny')),
-                          DataColumn(label: Text('Username')),
-                        ], rows: [
-                          //row 1
-                          DataRow(
-                            cells: [
-                              DataCell(Text('Name')),
-                              DataCell(Text('Place1')),
-                              DataCell(Text('Urgency Level')),
-                              DataCell(Text('Username')),
-                            ],
-                            onSelectChanged: (newValue) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        RequestInformationPage()),
-                              );
-                            },
-                          ),
-                        ]),
-                      )
+                      requestDataTable(context)
                     ],
                   ))
             ],
           ),
         ));
   }
+}
+
+Container requestDataTable(BuildContext context) {
+  final List<HelperRequest> requestList = [
+    HelperRequest("name1", "type1", 2, GeoPoint(37.7749, -122.4194),
+        "directions1", "info1", "need1", "secondPerson1", "status1", "userID1"),
+    HelperRequest("name2", "type2", 3, GeoPoint(37.7749, -122.4194),
+        "directions2", "info2", "need2", "secondPerson2", "status2", "userID2")
+  ];
+
+  requestList.sort((a, b) => b.emergency - a.emergency);
+
+  return Container(
+    child: DataTable(
+      showCheckboxColumn: false,
+      columns: [
+        DataColumn(label: Text('Type')),
+        DataColumn(label: Text('Place')),
+        DataColumn(label: Text('Urgency')),
+        DataColumn(label: Text('Username')),
+      ],
+      rows: requestList.map((request) {
+        return DataRow(
+          cells: [
+            DataCell(Text(request.type)),
+            DataCell(Text(request.location.toString())),
+            DataCell(Text(request.emergency.toString())),
+            DataCell(Text(request.name)),
+          ],
+          onSelectChanged: (newValue) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RequestInformationPage()),
+            );
+          },
+        );
+      }).toList(),
+    ),
+  );
 }
