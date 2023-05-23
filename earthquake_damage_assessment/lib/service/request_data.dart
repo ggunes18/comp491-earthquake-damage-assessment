@@ -59,3 +59,7 @@ Future<List<VictimRequest>> getRequestVictim() async {
 
   return requestList;
 }
+
+void updateRequestStatus(HelperRequest request) {
+  /////
+}

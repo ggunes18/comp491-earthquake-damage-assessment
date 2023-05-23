@@ -64,7 +64,7 @@ class _HelperRequestPageState extends State<HelperRequestPage> {
                   child: Column(
                     children: [
                       Row(
-                        children: [
+                        children: const [
                           Text(
                             "KuHelp - Request Page",
                             style: TextStyle(
@@ -86,10 +86,19 @@ class _HelperRequestPageState extends State<HelperRequestPage> {
 
 Container requestDataTable(BuildContext context) {
   final List<HelperRequest> requestList = [
-    HelperRequest("name1", "type1", 2, GeoPoint(37.7749, -122.4194),
-        "directions1", "info1", "need1", "secondPerson1", "status1", "userID1"),
+    HelperRequest(
+        "name1",
+        "type1",
+        2,
+        GeoPoint(37.7749, -122.4194),
+        "directions1",
+        "info1",
+        "need1",
+        "secondPerson1",
+        "received",
+        "userID1"),
     HelperRequest("name2", "type2", 3, GeoPoint(37.7749, -122.4194),
-        "directions2", "info2", "need2", "secondPerson2", "status2", "userID2")
+        "directions2", "info2", "need2", "secondPerson2", "received", "userID2")
   ];
 
   requestList.sort((a, b) => b.emergency - a.emergency);
@@ -97,7 +106,7 @@ Container requestDataTable(BuildContext context) {
   return Container(
     child: DataTable(
       showCheckboxColumn: false,
-      columns: [
+      columns: const [
         DataColumn(label: Text('Type')),
         DataColumn(label: Text('Place')),
         DataColumn(label: Text('Urgency')),
@@ -114,7 +123,9 @@ Container requestDataTable(BuildContext context) {
           onSelectChanged: (newValue) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RequestInformationPage()),
+              MaterialPageRoute(
+                  builder: (context) =>
+                      RequestInformationPage(helperRequest: request)),
             );
           },
         );
