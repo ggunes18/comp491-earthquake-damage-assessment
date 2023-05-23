@@ -44,28 +44,212 @@ class _VictimHomePageState extends State<VictimHomePage> {
   final List<Marker> marker = [
     Marker(
       markerId: MarkerId("1"),
-      position: LatLng(41.206862, 29.072034),
+      position: LatLng(41.0284, 28.5870),
       infoWindow: InfoWindow(
-        title: "Safe Location 1",
+        title: "Büyükçekmece Acil Toplanma Alanı",
       ),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     ),
     Marker(
       markerId: MarkerId("2"),
-      position: LatLng(41.2054283, 29.07240),
+      position: LatLng(40.8490, 29.1233),
       infoWindow: InfoWindow(
-        title: "Safe Location 2",
+        title: "Adalar Acil Toplanma Alanı",
       ),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     ),
     Marker(
       markerId: MarkerId("3"),
-      position: LatLng(41.0848, 29.0510),
+      position: LatLng(41.185915, 28.729731),
       infoWindow: InfoWindow(
-        title: "Safe Location 3",
+        title: "Arnavutköy Acil Toplanma Alanı",
       ),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     ),
+    Marker(
+      markerId: MarkerId("4"),
+      position: LatLng(40.9800, 29.0999),
+      infoWindow: InfoWindow(
+        title: "Ataşehir Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("5"),
+      position: LatLng(41.145317, 29.086227),
+      infoWindow: InfoWindow(
+        title: "Beykoz Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("6"),
+      position: LatLng(41.0390, 28.9845),
+      infoWindow: InfoWindow(
+        title: "Beyoğlu Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("7"),
+      position: LatLng(41.0157, 29.1018),
+      infoWindow: InfoWindow(
+        title: "Çekmeköy Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("8"),
+      position: LatLng(41.0141, 28.5354),
+      infoWindow: InfoWindow(
+        title: "Esenler Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("9"),
+      position: LatLng(41.0336, 28.4020),
+      infoWindow: InfoWindow(
+        title: "Esenyurt Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("10"),
+      position: LatLng(41.089278, 28.923708),
+      infoWindow: InfoWindow(
+        title: "Eyüp Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("11"),
+      position: LatLng(41.007324, 28.978153),
+      infoWindow: InfoWindow(
+        title: "Fatih Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("12"),
+      position: LatLng(41.1145, 28.5920),
+      infoWindow: InfoWindow(
+        title: "Gaziosmanpaşa Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("13"),
+      position: LatLng(40.5839, 29.0516),
+      infoWindow: InfoWindow(
+        title: "Kadıköy Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("14"),
+      position: LatLng(40.5416, 29.1028),
+      infoWindow: InfoWindow(
+        title: "Kartal Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("15"),
+      position: LatLng(40.5954, 28.4658),
+      infoWindow: InfoWindow(
+        title: "Küçükçekmece Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("16"),
+      position: LatLng(40.939390, 29.131630),
+      infoWindow: InfoWindow(
+        title: "Maltepe Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("17"),
+      position: LatLng(40.5224, 29.1908),
+      infoWindow: InfoWindow(
+        title: "Pendik Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("19"),
+      position: LatLng(41.106727, 29.017327),
+      infoWindow: InfoWindow(
+        title: "Sarıyer Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("20"),
+      position: LatLng(41.0354, 28.1659),
+      infoWindow: InfoWindow(
+        title: "Silivri Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("21"),
+      position: LatLng(40.5717, 29.1644),
+      infoWindow: InfoWindow(
+        title: "Sultanbeyli Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("22"),
+      position: LatLng(41.0641, 28.5217),
+      infoWindow: InfoWindow(
+        title: "Sultangazi Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("23"),
+      position: LatLng(41.17755978, 29.62314785),
+      infoWindow: InfoWindow(
+        title: "Şile Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("26"),
+      position: LatLng(41.030254, 29.105804),
+      infoWindow: InfoWindow(
+        title: "Ümraniye Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("27"),
+      position: LatLng(41.012825, 29.051967),
+      infoWindow: InfoWindow(
+        title: "Üsküdar Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("28"),
+      position: LatLng(41.0037, 28.5456),
+      infoWindow: InfoWindow(
+        title: "Zeytinburnu Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    ),
+    Marker(
+      markerId: MarkerId("30"),
+      position: LatLng(40.5726, 28.4957),
+      infoWindow: InfoWindow(
+        title: "Bakırköy Acil Toplanma Alanı",
+      ),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    )
   ];
 
   @override
@@ -302,9 +486,32 @@ class SafeLocation {
 }
 
 List<SafeLocation> safeLocations = [
-  SafeLocation('Safe Location 1', LatLng(41.206862, 29.072034)),
-  SafeLocation('Safe Location 2', LatLng(41.2054283, 29.07240)),
-  SafeLocation('Safe Location 3', LatLng(41.0848, 29.0510)),
+  SafeLocation('Büyükçekmece Acil Toplanma Alanı', LatLng(41.0284, 28.5870)),
+  SafeLocation('Adalar Acil Toplanma Alanı', LatLng(40.8490, 29.1233)),
+  SafeLocation('Arnavutköy Acil Toplanma Alanı', LatLng(41.185915, 28.729731)),
+  SafeLocation('Ataşehir Acil Toplanma Alanı', LatLng(40.9800, 29.0999)),
+  SafeLocation('Beykoz Acil Toplanma Alanı', LatLng(41.145317, 29.086227)),
+  SafeLocation('Beyoğlu Acil Toplanma Alanı', LatLng(41.0390, 28.9845)),
+  SafeLocation('Çekmeköy Acil Toplanma Alanı', LatLng(41.0157, 29.1018)),
+  SafeLocation('Esenler Acil Toplanma Alanı', LatLng(41.0141, 28.5354)),
+  SafeLocation('Esenyurt Acil Toplanma Alanı', LatLng(41.0336, 28.4020)),
+  SafeLocation('Eyüp Acil Toplanma Alanı', LatLng(41.089278, 28.923708)),
+  SafeLocation('Fatih Acil Toplanma Alanı', LatLng(41.007324, 28.978153)),
+  SafeLocation('Gaziosmanpaşa Acil Toplanma Alanı', LatLng(41.1145, 28.5920)),
+  SafeLocation('Kadıköy Acil Toplanma Alanı', LatLng(40.5839, 29.0516)),
+  SafeLocation('Kartal Acil Toplanma Alanı', LatLng(40.5416, 29.1028)),
+  SafeLocation('Küçükçekmece Acil Toplanma Alanı', LatLng(40.5954, 28.4658)),
+  SafeLocation('Maltepe Acil Toplanma Alanı', LatLng(40.939390, 29.131630)),
+  SafeLocation('Pendik Acil Toplanma Alanı', LatLng(40.5224, 29.1908)),
+  SafeLocation('Sarıyer Acil Toplanma Alanı', LatLng(41.106727, 29.017327)),
+  SafeLocation('Silivri Acil Toplanma Alanı', LatLng(41.0354, 28.1659)),
+  SafeLocation('Sultanbeyli Acil Toplanma Alanı', LatLng(40.5717, 29.1644)),
+  SafeLocation('Sultangazi Acil Toplanma Alanı', LatLng(41.0641, 28.5217)),
+  SafeLocation('Şile Acil Toplanma Alanı', LatLng(41.17755978, 29.62314785)),
+  SafeLocation('Ümraniye Acil Toplanma Alanı', LatLng(41.030254, 29.105804)),
+  SafeLocation('Üsküdar Acil Toplanma Alanı', LatLng(41.012825, 29.051967)),
+  SafeLocation('Zeytinburnu Acil Toplanma Alanı', LatLng(41.0037, 28.5456)),
+  SafeLocation('Bakırköy Acil Toplanma Alanı', LatLng(40.5726, 28.4957))
   // Add more locations as needed...
 ];
 
