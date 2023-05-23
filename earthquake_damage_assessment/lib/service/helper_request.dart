@@ -13,7 +13,10 @@ class HelperRequest {
   String need;
   String secondPerson;
   DocumentReference userID;
-  Timestamp time;
+  DateTime time;
+  String phone;
+  String emergencyPerson;
+  DocumentReference requestID;
 
   HelperRequest(
       this.type,
@@ -26,7 +29,10 @@ class HelperRequest {
       this.need,
       this.secondPerson,
       this.userID,
-      this.time);
+      this.time,
+      this.phone,
+      this.emergencyPerson,
+      this.requestID);
 }
 
 Future<List<HelperRequest>> getAllRequests() async {
@@ -36,7 +42,7 @@ Future<List<HelperRequest>> getAllRequests() async {
       await FirebaseFirestore.instance.collection('RequestTest').get();
 
   List<QueryDocumentSnapshot> documents = querySnapshot.docs;
-  requestList = documents.map((document) {
+  requestList = await Future.wait(documents.map((document) async {
     String type = document['type'];
     String status = document['status'];
     String name = document['name'];
@@ -47,15 +53,36 @@ Future<List<HelperRequest>> getAllRequests() async {
     String need = document['need'];
     String secondPerson = document['secondPerson'];
     DocumentReference userID = document['userID'];
-    Timestamp time = document['time'];
+    DateTime time = document['time'].toDate();
+    DocumentReference requestID = document.reference;
 
-    return HelperRequest(type, status, name, emergency, location, directions,
-        info, need, secondPerson, userID, time);
-  }).toList();
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('UserTest')
+        .doc(userID.id)
+        .get();
+    String phone = userSnapshot['phone'];
+    String emergencyPerson = userSnapshot['emergencyPerson'];
+
+    return HelperRequest(
+        type,
+        status,
+        name,
+        emergency,
+        location,
+        directions,
+        info,
+        need,
+        secondPerson,
+        userID,
+        time,
+        phone,
+        emergencyPerson,
+        requestID);
+  }).toList());
 
   return requestList;
 }
 
-void updateRequestStatus(HelperRequest request) {
-  ////
+void updateRequestStatus(DocumentReference requestRef, String newStatus) async {
+  await requestRef.update({'status': newStatus});
 }
