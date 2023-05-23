@@ -1,3 +1,4 @@
+import 'package:earthquake_damage_assessment/pages/helper/helper_request_page.dart';
 import 'package:flutter/material.dart';
 import '../../service/helper_request.dart';
 
@@ -35,14 +36,14 @@ class _RequestInformationPageState extends State<RequestInformationPage> {
     _requestStatusController = helperRequest.status;
     rowValues = [
       helperRequest.emergency.toString(),
-      "helperRequest.requestTime",
-      helperRequest.location.toString(),
+      helperRequest.time.toString(),
+      "${helperRequest.location.latitude},  ${helperRequest.location.longitude}",
       helperRequest.directions,
       helperRequest.need,
       helperRequest.name,
-      "helperRequest.phoneNumber",
+      helperRequest.phone,
       helperRequest.secondPerson,
-      "helperRequest.emergencyPhone",
+      helperRequest.emergencyPerson,
     ];
   }
 
@@ -82,56 +83,73 @@ class _RequestInformationPageState extends State<RequestInformationPage> {
     });
 
     return Scaffold(
-        appBar: appBarButtons(context),
-        body: SafeArea(
-            child: Center(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 3.0),
-              child: Center(
-                child: Text(
-                  "Request Information Page",
-                  style: TextStyle(
-                    color: Color.fromRGBO(199, 0, 56, 0.89),
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
+      appBar: appBarButtons(context),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                child: Center(
+                  child: Text(
+                    "Request Information Page",
+                    style: TextStyle(
+                      color: Color.fromRGBO(199, 0, 56, 0.89),
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            titleText(helperRequest.type),
-            DataTable(
-              columns: const [
-                DataColumn(label: Text('')),
-                DataColumn(label: Text('')),
-              ],
-              rows: rows,
-            ),
-            const SizedBox(height: 20),
-            texts("Request Status"),
-            const SizedBox(height: 10),
-            statusBox(),
-            const SizedBox(height: 5),
-            TextButton(
-              onPressed: () {
-                updateRequestStatus(helperRequest);
-              },
-              style: TextButton.styleFrom(
+              SizedBox(height: 10),
+              titleText(helperRequest.type),
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: DataTable(
+                  columns: const [
+                    DataColumn(label: Text('')),
+                    DataColumn(label: Text('')),
+                  ],
+                  rows: rows,
+                ),
+              ),
+              SizedBox(height: 20),
+              texts("Request Status"),
+              SizedBox(height: 10),
+              statusBox(),
+              SizedBox(height: 5),
+              TextButton(
+                onPressed: () {
+                  updateRequestStatus(
+                      helperRequest.requestID, _requestStatusController);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HelperRequestPage(),
+                    ),
+                  );
+                },
+                style: TextButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
-                  )),
-              child: const Text(
-                "Update Status",
-                style: TextStyle(
+                  ),
+                ),
+                child: const Text(
+                  "Update Status",
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                    color: Colors.white,
+                  ),
+                ),
               ),
-            ),
-          ]),
-        )));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
