@@ -38,7 +38,7 @@ class _VictimEditingPageState extends State<VictimEditingPage> {
           _bloodTypeController = newValue!;
         });
       },
-      focusColor: Color.fromARGB(255, 226, 226, 226),
+      focusColor: const Color.fromARGB(255, 226, 226, 226),
       autofocus: true,
       elevation: 15,
     );
@@ -109,7 +109,8 @@ AppBar appBarButtons(context) {
             clearTextFields();
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => VictimProfilePage()),
+              MaterialPageRoute(
+                  builder: (context) => const VictimProfilePage()),
             );
           },
           color: Colors.black,

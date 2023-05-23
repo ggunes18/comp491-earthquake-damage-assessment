@@ -13,14 +13,14 @@ class VictimRequest {
 class HelperRequest {
   String name;
   String type;
-  Int emergency;
+  int emergency;
   GeoPoint location;
   String directions;
   String info;
   String need;
   String secondPerson;
   String status;
-  Reference userID;
+  String userID; //Reference a geri değiştir
 
   HelperRequest(
       this.name,
@@ -58,4 +58,8 @@ Future<List<VictimRequest>> getRequestVictim() async {
   }
 
   return requestList;
+}
+
+void updateRequestStatus(HelperRequest request) {
+  ////
 }

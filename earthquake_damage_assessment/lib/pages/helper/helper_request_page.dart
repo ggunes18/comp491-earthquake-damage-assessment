@@ -2,12 +2,110 @@ import 'package:earthquake_damage_assessment/pages/helper/helper_profile_page.da
 import 'package:flutter/material.dart';
 import 'helper_home_page.dart';
 import 'request_info_page.dart';
+import '../../service/request_data_for_admin.dart';
 
 class HelperRequestPage extends StatefulWidget {
   const HelperRequestPage({super.key});
 
   @override
   State<HelperRequestPage> createState() => _HelperRequestPageState();
+}
+
+Future<Container> requestsTable() async {
+  final List<VictimRequest> requestList = await getAllRequests();
+//requesttime, location, directions, needs, name, id, phone number
+  return Container(
+    child: DataTable(
+      columns: const [
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Request',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Type',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Status',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Name',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Emergency',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Location',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Direction',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Info',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Need',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Second Person',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'userID',
+          textAlign: TextAlign.center,
+        ))),
+      ],
+      rows: requestList.map((request) {
+        final index = requestList.indexOf(request) + 1;
+        return DataRow(
+          cells: [
+            DataCell(Center(child: Text('Request $index'))),
+            DataCell(Center(child: Text(request.type))),
+            DataCell(Center(child: Text(request.status))),
+            DataCell(Center(child: Text(request.name))),
+            DataCell(Center(child: Text(request.emergency as String))),
+            DataCell(Center(child: Text(request.location as String))),
+            DataCell(Center(child: Text(request.directions))),
+            DataCell(Center(child: Text(request.info))),
+            DataCell(Center(child: Text(request.need))),
+            DataCell(Center(child: Text(request.secondPerson))),
+            DataCell(Center(child: Text(request.userID))),
+            DataCell(Center(child: Text(request.time as String))),
+            //DataCell(Center(child: Text(request.requestID))),
+          ],
+        );
+      }).toList(),
+    ),
+  );
 }
 
 class _HelperRequestPageState extends State<HelperRequestPage> {
@@ -98,7 +196,20 @@ class _HelperRequestPageState extends State<HelperRequestPage> {
                             },
                           ),
                         ]),
-                      )
+                      ),
+                      FutureBuilder<Container>(
+                        future: requestsTable(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return snapshot.data!;
+                          }
+                        },
+                      ),
                     ],
                   ))
             ],

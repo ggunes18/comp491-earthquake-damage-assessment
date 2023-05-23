@@ -3,8 +3,8 @@ import 'package:earthquake_damage_assessment/service/location_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:get/get.dart';
 import 'victim_home_page.dart';
+import 'package:intl/intl.dart';
 
 final TextEditingController _nameController = TextEditingController();
 final TextEditingController _needsController = TextEditingController();
@@ -196,6 +196,12 @@ Future<void> addRequest(context, requestType) async {
     "secondPerson": _secondPersonController.text,
     "emergency": emergencyLevel,
     "status": "received",
+    "time": DateTime.fromMillisecondsSinceEpoch(DateTime.now()
+            .toUtc()
+            .add(const Duration(hours: 0))
+            .millisecondsSinceEpoch ~/
+        1000 *
+        1000),
     "userID": firestore
         .collection('UserTest')
         .doc(FirebaseAuth.instance.currentUser?.uid)
