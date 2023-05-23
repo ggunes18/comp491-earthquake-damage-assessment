@@ -1,15 +1,111 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:earthquake_damage_assessment/pages/helper/helper_profile_page.dart';
-import 'package:earthquake_damage_assessment/service/request_data.dart';
 import 'package:flutter/material.dart';
 import 'helper_home_page.dart';
 import 'request_info_page.dart';
+import '../../service/request_data_for_admin.dart';
 
 class HelperRequestPage extends StatefulWidget {
   const HelperRequestPage({super.key});
 
   @override
   State<HelperRequestPage> createState() => _HelperRequestPageState();
+}
+
+Future<Container> requestsTable() async {
+  final List<VictimRequest> requestList = await getAllRequests();
+//requesttime, location, directions, needs, name, id, phone number
+  return Container(
+    child: DataTable(
+      columns: const [
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Request',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Type',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Status',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Name',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Emergency',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Location',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Direction',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Info',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Need',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'Second Person',
+          textAlign: TextAlign.center,
+        ))),
+        DataColumn(
+            label: Expanded(
+                child: Text(
+          'userID',
+          textAlign: TextAlign.center,
+        ))),
+      ],
+      rows: requestList.map((request) {
+        final index = requestList.indexOf(request) + 1;
+        return DataRow(
+          cells: [
+            DataCell(Center(child: Text('Request $index'))),
+            DataCell(Center(child: Text(request.type))),
+            DataCell(Center(child: Text(request.status))),
+            DataCell(Center(child: Text(request.name))),
+            DataCell(Center(child: Text(request.emergency as String))),
+            DataCell(Center(child: Text(request.location as String))),
+            DataCell(Center(child: Text(request.directions))),
+            DataCell(Center(child: Text(request.info))),
+            DataCell(Center(child: Text(request.need))),
+            DataCell(Center(child: Text(request.secondPerson))),
+            DataCell(Center(child: Text(request.userID))),
+            DataCell(Center(child: Text(request.time as String))),
+            //DataCell(Center(child: Text(request.requestID))),
+          ],
+        );
+      }).toList(),
+    ),
+  );
 }
 
 class _HelperRequestPageState extends State<HelperRequestPage> {
@@ -64,7 +160,7 @@ class _HelperRequestPageState extends State<HelperRequestPage> {
                   child: Column(
                     children: [
                       Row(
-                        children: const [
+                        children: [
                           Text(
                             "KuHelp - Request Page",
                             style: TextStyle(
@@ -75,61 +171,49 @@ class _HelperRequestPageState extends State<HelperRequestPage> {
                           )
                         ],
                       ),
-                      requestDataTable(context)
+                      Container(
+                        child: DataTable(showCheckboxColumn: false, columns: [
+                          DataColumn(label: Text('Type')),
+                          DataColumn(label: Text('Place')),
+                          DataColumn(label: Text('Urgeny')),
+                          DataColumn(label: Text('Username')),
+                        ], rows: [
+                          //row 1
+                          DataRow(
+                            cells: [
+                              DataCell(Text('Name')),
+                              DataCell(Text('Place1')),
+                              DataCell(Text('Urgency Level')),
+                              DataCell(Text('Username')),
+                            ],
+                            onSelectChanged: (newValue) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        RequestInformationPage()),
+                              );
+                            },
+                          ),
+                        ]),
+                      ),
+                      FutureBuilder<Container>(
+                        future: requestsTable(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return snapshot.data!;
+                          }
+                        },
+                      ),
                     ],
                   ))
             ],
           ),
         ));
   }
-}
-
-Container requestDataTable(BuildContext context) {
-  final List<HelperRequest> requestList = [
-    HelperRequest(
-        "name1",
-        "type1",
-        2,
-        GeoPoint(37.7749, -122.4194),
-        "directions1",
-        "info1",
-        "need1",
-        "secondPerson1",
-        "received",
-        "userID1"),
-    HelperRequest("name2", "type2", 3, GeoPoint(37.7749, -122.4194),
-        "directions2", "info2", "need2", "secondPerson2", "received", "userID2")
-  ];
-
-  requestList.sort((a, b) => b.emergency - a.emergency);
-
-  return Container(
-    child: DataTable(
-      showCheckboxColumn: false,
-      columns: const [
-        DataColumn(label: Text('Type')),
-        DataColumn(label: Text('Place')),
-        DataColumn(label: Text('Urgency')),
-        DataColumn(label: Text('Username')),
-      ],
-      rows: requestList.map((request) {
-        return DataRow(
-          cells: [
-            DataCell(Text(request.type)),
-            DataCell(Text(request.location.toString())),
-            DataCell(Text(request.emergency.toString())),
-            DataCell(Text(request.name)),
-          ],
-          onSelectChanged: (newValue) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      RequestInformationPage(helperRequest: request)),
-            );
-          },
-        );
-      }).toList(),
-    ),
-  );
 }
