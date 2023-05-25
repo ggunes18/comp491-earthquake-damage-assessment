@@ -444,7 +444,15 @@ class _VictimHomePageState extends State<VictimHomePage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      //const SizedBox(height: 20),
+                      Container(
+                        height: 30,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/scroll.png"),
+                          ),
+                        ),
+                      ),
 
                       //List of buttons
                       SingleChildScrollView(
