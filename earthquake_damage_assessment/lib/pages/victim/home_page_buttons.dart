@@ -21,11 +21,12 @@ class HomePageButton extends StatelessWidget {
         );
       },
       style: TextButton.styleFrom(
-          backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ) // Background Color
-          ),
+        backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        minimumSize: const Size(150, 60), // Adjust the size as per your
+      ),
       child: Text(
         text,
         style: const TextStyle(

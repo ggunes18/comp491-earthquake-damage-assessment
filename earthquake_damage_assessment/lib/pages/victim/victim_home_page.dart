@@ -447,23 +447,44 @@ class _VictimHomePageState extends State<VictimHomePage> {
                       const SizedBox(height: 20),
 
                       //List of buttons
-                      Expanded(
-                        child: ListView(
-                          children: const [
-                            HomePageButton(
-                              text: "INJURED",
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(
+                                  8.0), // Adjust the padding values as per your requirement
+                              child: HomePageButton(
+                                text: "INJURED",
+                              ),
                             ),
-                            HomePageButton(
-                              text: "LOST",
+                            Padding(
+                              padding: const EdgeInsets.all(
+                                  8.0), // Adjust the padding values as per your requirement
+                              child: HomePageButton(
+                                text: "LOST",
+                              ),
                             ),
-                            HomePageButton(
-                              text: "LOST RELATIVE",
+                            Padding(
+                              padding: const EdgeInsets.all(
+                                  8.0), // Adjust the padding values as per your requirement
+                              child: HomePageButton(
+                                text: "LOST RELATIVE",
+                              ),
                             ),
-                            HomePageButton(
-                              text: "UNDER THE DEBRIS",
+                            Padding(
+                              padding: const EdgeInsets.all(
+                                  8.0), // Adjust the padding values as per your requirement
+                              child: HomePageButton(
+                                text: "UNDER THE DEBRIS",
+                              ),
                             ),
-                            HomePageButton(
-                              text: "REQUEST RESOURCE",
+                            Padding(
+                              padding: const EdgeInsets.all(
+                                  8.0), // Adjust the padding values as per your requirement
+                              child: HomePageButton(
+                                text: "REQUEST RESOURCE",
+                              ),
                             ),
                           ],
                         ),
