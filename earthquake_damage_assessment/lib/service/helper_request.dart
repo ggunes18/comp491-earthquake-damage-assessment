@@ -6,7 +6,7 @@ class HelperRequest {
   String type;
   String status;
   String name;
-  double emergency;
+  int emergency;
   GeoPoint location;
   String directions;
   String info;
@@ -16,6 +16,7 @@ class HelperRequest {
   DateTime time;
   String phone;
   String emergencyPerson;
+  String userName;
   DocumentReference requestID;
 
   HelperRequest(
@@ -32,6 +33,7 @@ class HelperRequest {
       this.time,
       this.phone,
       this.emergencyPerson,
+      this.userName,
       this.requestID);
 }
 
@@ -46,7 +48,7 @@ Future<List<HelperRequest>> getAllRequests() async {
     String type = document['type'];
     String status = document['status'];
     String name = document['name'];
-    double emergency = document['emergency'];
+    int emergency = document['emergency'];
     GeoPoint location = document['location'];
     String directions = document['directions'];
     String info = document['info'];
@@ -62,6 +64,7 @@ Future<List<HelperRequest>> getAllRequests() async {
         .get();
     String phone = userSnapshot['phone'];
     String emergencyPerson = userSnapshot['emergencyPerson'];
+    String userName = userSnapshot['userName'];
 
     return HelperRequest(
         type,
@@ -77,6 +80,7 @@ Future<List<HelperRequest>> getAllRequests() async {
         time,
         phone,
         emergencyPerson,
+        userName,
         requestID);
   }).toList());
 
