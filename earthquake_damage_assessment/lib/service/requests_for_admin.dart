@@ -7,11 +7,12 @@ class VictimRequest {
   String status;
   GeoPoint location;
   String userName;
-  VictimRequest(this.type, this.status, this.location, this.userName);
+  int emergencylevel;
+  VictimRequest(this.type, this.status, this.location, this.userName,
+      this.emergencylevel);
 }
 
 Future<List<VictimRequest>> getRequestVictim() async {
-  String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
   List<VictimRequest> requestList = [];
 
   QuerySnapshot querySnapshot =
@@ -23,8 +24,9 @@ Future<List<VictimRequest>> getRequestVictim() async {
     String status = document['status'];
     GeoPoint location = document['location'];
     String userName = document['name'];
+    int emergencylevel = (document['emergency'] as num).toInt();
 
-    return VictimRequest(type, status, location, userName);
+    return VictimRequest(type, status, location, userName, emergencylevel);
   }).toList();
 
   return requestList;
