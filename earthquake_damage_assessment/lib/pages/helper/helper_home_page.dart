@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:earthquake_damage_assessment/pages/helper/map_marker.dart';
+import 'package:earthquake_damage_assessment/pages/helper/map_marker_admin.dart';
+import 'package:earthquake_damage_assessment/service/requests_for_admin.dart';
 import 'package:earthquake_damage_assessment/service/location_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -46,16 +47,36 @@ class _HelperHomePageState extends State<HelperHomePage> {
     }
   }
 
-  final List<Marker> marker = [
-    createMarker(41.206862, 29.072034, 3, "victim1"),
-    createMarker(41.20, 29.07, 4, "victim2")
-  ];
-
   @override
   void initState() {
     super.initState();
+    fetchAndDisplayRequests();
+  }
+
+  LatLng parseGeolocation(List<String> geo) {
+    double latitude = double.parse(geo[0].split('°')[0]) *
+        (geo[0].split('°')[1].trim() == 'S' ? -1 : 1);
+    double longitude = double.parse(geo[1].split('°')[0]) *
+        (geo[1].split('°')[1].trim() == 'W' ? -1 : 1);
+
+    return LatLng(latitude, longitude);
+  }
+
+  void fetchAndDisplayRequests() async {
     getLocation();
-    markers.addAll(marker);
+    List<VictimRequest> requestList = await getRequestVictim();
+    for (var request in requestList) {
+      String emergencylvl = request.emergencylevel.toString();
+      Marker marker = createMarker(
+          request.location.latitude,
+          request.location.longitude,
+          emergencylvl,
+          request.userName,
+          request.status);
+      setState(() {
+        markers.add(marker);
+      });
+    }
   }
 
   void getLocation() async {
@@ -72,6 +93,9 @@ class _HelperHomePageState extends State<HelperHomePage> {
         CameraUpdate.newCameraPosition(initialCameraPosition),
       );
     }
+
+    // Fetch and display all requests again every time we update the location
+    fetchAndDisplayRequests();
   }
 
   @override
