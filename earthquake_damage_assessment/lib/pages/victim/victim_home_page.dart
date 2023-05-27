@@ -261,6 +261,25 @@ class _VictimHomePageState extends State<VictimHomePage> {
 
   void getLocation() async {
     Position position = await LocationService().getUserCurrentLocation();
+    if (mounted) {
+      // check if the widget is still in the widget tree
+      setState(() {
+        initialCameraPosition = CameraPosition(
+          target: LatLng(position.latitude, position.longitude),
+          zoom: 15,
+        );
+      });
+
+      if (_controllerCompleter.isCompleted) {
+        mapController.moveCamera(
+          CameraUpdate.newCameraPosition(initialCameraPosition),
+        );
+      }
+    }
+  }
+
+  /* void getLocation() async {
+    Position position = await LocationService().getUserCurrentLocation();
     setState(() {
       initialCameraPosition = CameraPosition(
         target: LatLng(position.latitude, position.longitude),
@@ -273,7 +292,7 @@ class _VictimHomePageState extends State<VictimHomePage> {
         CameraUpdate.newCameraPosition(initialCameraPosition),
       );
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
