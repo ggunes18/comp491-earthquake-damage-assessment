@@ -153,15 +153,15 @@ TextButton submitButton(context, requestType) {
             ),
             actions: [
               TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  addRequest(context, requestType);
-                },
-              ),
-              TextButton(
                 child: const Text('Edit Request'),
                 onPressed: () {
                   Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  addRequest(context, requestType);
                 },
               ),
             ],

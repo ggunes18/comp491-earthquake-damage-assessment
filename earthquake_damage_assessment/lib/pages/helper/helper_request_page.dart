@@ -322,7 +322,7 @@ class _HelperRequestPageState extends State<HelperRequestPage> {
                       Row(
                         children: const [
                           Text(
-                            "KuHelp - Request Page",
+                            "KuHelp",
                             style: TextStyle(
                               color: Color.fromRGBO(199, 0, 56, 0.89),
                               fontSize: 28,

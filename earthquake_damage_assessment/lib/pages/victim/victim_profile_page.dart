@@ -174,7 +174,7 @@ ListView body(Map<String, String> data) {
   return ListView(
     physics: const BouncingScrollPhysics(),
     children: [
-      profilePhoto(data['userName']!),
+      profilePhoto(data['nameSurname']!),
       const SizedBox(
         height: 20,
       ),

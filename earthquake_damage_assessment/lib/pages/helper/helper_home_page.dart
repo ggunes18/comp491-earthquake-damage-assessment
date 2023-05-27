@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'package:earthquake_damage_assessment/pages/helper/map_marker.dart';
+import 'package:earthquake_damage_assessment/pages/helper/helper_map_marker.dart';
 import 'package:earthquake_damage_assessment/service/location_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import '../../service/helper_request.dart';
 import 'helper_profile_page.dart';
 import 'helper_request_page.dart';
-import 'request_info_page.dart';
 
 class HelperHomePage extends StatefulWidget {
   const HelperHomePage({super.key});
@@ -18,7 +18,7 @@ class HelperHomePage extends StatefulWidget {
 class _HelperHomePageState extends State<HelperHomePage> {
   int _selectedIndex = 1;
 
-  CameraPosition initialCameraPosition = CameraPosition(
+  CameraPosition initialCameraPosition = const CameraPosition(
     target: LatLng(41.2054283, 29.07241),
     zoom: 14,
   );
@@ -46,16 +46,29 @@ class _HelperHomePageState extends State<HelperHomePage> {
     }
   }
 
-  final List<Marker> marker = [
-    createMarker(41.206862, 29.072034, 3, "victim1"),
-    createMarker(41.20, 29.07, 4, "victim2")
-  ];
-
   @override
   void initState() {
     super.initState();
+    fetchAndDisplayRequests();
+  }
+
+  void fetchAndDisplayRequests() async {
     getLocation();
-    markers.addAll(marker);
+    List<HelperRequest> requestList = await getAllRequests();
+    for (var request in requestList) {
+      // ignore: use_build_context_synchronously
+      Marker marker = createMarker(
+          context,
+          request.location.latitude,
+          request.location.longitude,
+          request.emergency,
+          request.userName,
+          request.status,
+          request);
+      setState(() {
+        markers.add(marker);
+      });
+    }
   }
 
   void getLocation() async {
@@ -72,6 +85,9 @@ class _HelperHomePageState extends State<HelperHomePage> {
         CameraUpdate.newCameraPosition(initialCameraPosition),
       );
     }
+
+    // Fetch and display all requests again every time we update the location
+    fetchAndDisplayRequests();
   }
 
   @override
