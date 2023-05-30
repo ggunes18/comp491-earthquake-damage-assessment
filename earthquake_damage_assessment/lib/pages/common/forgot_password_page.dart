@@ -1,7 +1,6 @@
 import 'package:earthquake_damage_assessment/service/auth.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart';
-import 'sign_in_page.dart';
+import 'package:earthquake_damage_assessment/pages/common/login_page.dart';
 
 final TextEditingController _mailController = TextEditingController();
 

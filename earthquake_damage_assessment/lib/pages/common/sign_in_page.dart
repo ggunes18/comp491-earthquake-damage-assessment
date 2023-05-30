@@ -1,9 +1,8 @@
-import 'package:earthquake_damage_assessment/pages/victim/victim_home_page.dart';
-import 'package:earthquake_damage_assessment/pages/common/checkbox_victim_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:earthquake_damage_assessment/pages/common/checkbox_victim_helper.dart';
+import 'package:earthquake_damage_assessment/pages/common/first_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
-import '../helper/helper_home_page.dart';
-import 'login_page.dart';
+import 'package:earthquake_damage_assessment/pages/common/login_page.dart';
 
 final TextEditingController _mailController = TextEditingController();
 final TextEditingController _usernOrganizationController =
@@ -201,7 +200,7 @@ Future<void> signVictimIn(context) async {
         .then((uid) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const VictimHomePage()),
+        MaterialPageRoute(builder: (context) => const LoginPage()),
       );
       _mailController.clear();
       _usernOrganizationController.clear();
@@ -226,7 +225,7 @@ Future<void> signHelperIn(context) async {
         .then((uid) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HelperHomePage()),
+        MaterialPageRoute(builder: (context) => const LoginPage()),
       );
       _mailController.clear();
       _usernOrganizationController.clear();

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:earthquake_damage_assessment/pages/victim/home_page_buttons.dart';
 import 'package:earthquake_damage_assessment/service/location_services.dart';
+import 'package:earthquake_damage_assessment/service/safe_locations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,6 +21,7 @@ class VictimHomePage extends StatefulWidget {
 
 late GoogleMapController mapController;
 Set<Marker> markers = {};
+List<SafeLocation> safeLocations = [];
 final Completer<GoogleMapController> _controllerCompleter = Completer();
 
 class _VictimHomePageState extends State<VictimHomePage> {
@@ -34,6 +37,7 @@ class _VictimHomePageState extends State<VictimHomePage> {
       _selectedIndex = index;
     });
     if (index == 1) {
+      _searchController.clear();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const VictimProfilePage()),
@@ -41,228 +45,51 @@ class _VictimHomePageState extends State<VictimHomePage> {
     }
   }
 
-  final List<Marker> marker = [
-    Marker(
-      markerId: MarkerId("1"),
-      position: LatLng(41.0284, 28.5870),
-      infoWindow: InfoWindow(
-        title: "Büyükçekmece Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("2"),
-      position: LatLng(40.8490, 29.1233),
-      infoWindow: InfoWindow(
-        title: "Adalar Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("3"),
-      position: LatLng(41.185915, 28.729731),
-      infoWindow: InfoWindow(
-        title: "Arnavutköy Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("4"),
-      position: LatLng(40.9800, 29.0999),
-      infoWindow: InfoWindow(
-        title: "Ataşehir Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("5"),
-      position: LatLng(41.145317, 29.086227),
-      infoWindow: InfoWindow(
-        title: "Beykoz Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("6"),
-      position: LatLng(41.0390, 28.9845),
-      infoWindow: InfoWindow(
-        title: "Beyoğlu Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("7"),
-      position: LatLng(41.0157, 29.1018),
-      infoWindow: InfoWindow(
-        title: "Çekmeköy Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("8"),
-      position: LatLng(41.0141, 28.5354),
-      infoWindow: InfoWindow(
-        title: "Esenler Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("9"),
-      position: LatLng(41.0336, 28.4020),
-      infoWindow: InfoWindow(
-        title: "Esenyurt Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("10"),
-      position: LatLng(41.089278, 28.923708),
-      infoWindow: InfoWindow(
-        title: "Eyüp Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("11"),
-      position: LatLng(41.007324, 28.978153),
-      infoWindow: InfoWindow(
-        title: "Fatih Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("12"),
-      position: LatLng(41.1145, 28.5920),
-      infoWindow: InfoWindow(
-        title: "Gaziosmanpaşa Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("13"),
-      position: LatLng(40.5839, 29.0516),
-      infoWindow: InfoWindow(
-        title: "Kadıköy Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("14"),
-      position: LatLng(40.5416, 29.1028),
-      infoWindow: InfoWindow(
-        title: "Kartal Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("15"),
-      position: LatLng(40.5954, 28.4658),
-      infoWindow: InfoWindow(
-        title: "Küçükçekmece Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("16"),
-      position: LatLng(40.939390, 29.131630),
-      infoWindow: InfoWindow(
-        title: "Maltepe Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("17"),
-      position: LatLng(40.5224, 29.1908),
-      infoWindow: InfoWindow(
-        title: "Pendik Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("19"),
-      position: LatLng(41.106727, 29.017327),
-      infoWindow: InfoWindow(
-        title: "Sarıyer Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("20"),
-      position: LatLng(41.0354, 28.1659),
-      infoWindow: InfoWindow(
-        title: "Silivri Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("21"),
-      position: LatLng(40.5717, 29.1644),
-      infoWindow: InfoWindow(
-        title: "Sultanbeyli Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("22"),
-      position: LatLng(41.0641, 28.5217),
-      infoWindow: InfoWindow(
-        title: "Sultangazi Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("23"),
-      position: LatLng(41.17755978, 29.62314785),
-      infoWindow: InfoWindow(
-        title: "Şile Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("26"),
-      position: LatLng(41.030254, 29.105804),
-      infoWindow: InfoWindow(
-        title: "Ümraniye Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("27"),
-      position: LatLng(41.012825, 29.051967),
-      infoWindow: InfoWindow(
-        title: "Üsküdar Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("28"),
-      position: LatLng(41.0037, 28.5456),
-      infoWindow: InfoWindow(
-        title: "Zeytinburnu Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    ),
-    Marker(
-      markerId: MarkerId("30"),
-      position: LatLng(40.5726, 28.4957),
-      infoWindow: InfoWindow(
-        title: "Bakırköy Acil Toplanma Alanı",
-      ),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
-    )
-  ];
+  Future<Set<Marker>> createMarkers() async {
+    List<SafeLocation> locationList = await getSafeLocations();
+
+    Set<Marker> markerSet = {};
+    int markerId = 1;
+
+    for (SafeLocation location in locationList) {
+      LatLng latLng =
+          LatLng(location.location.latitude, location.location.longitude);
+
+      Marker marker = Marker(
+        markerId: MarkerId(markerId.toString()),
+        position: latLng,
+        infoWindow: InfoWindow(title: location.title),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+      );
+
+      markerSet.add(marker);
+      markerId++;
+    }
+
+    return markerSet;
+  }
 
   @override
   void initState() {
     super.initState();
     getLocation();
-    markers.addAll(marker);
+
+    createMarkers().then((markerSet) {
+      setState(() {
+        markers = markerSet;
+      });
+    });
+
+    getSafeLocations().then((list) {
+      setState(() {
+        safeLocations = list;
+      });
+    });
   }
 
   void getLocation() async {
     Position position = await LocationService().getUserCurrentLocation();
     if (mounted) {
-      // check if the widget is still in the widget tree
       setState(() {
         initialCameraPosition = CameraPosition(
           target: LatLng(position.latitude, position.longitude),
@@ -277,22 +104,6 @@ class _VictimHomePageState extends State<VictimHomePage> {
       }
     }
   }
-
-  /* void getLocation() async {
-    Position position = await LocationService().getUserCurrentLocation();
-    setState(() {
-      initialCameraPosition = CameraPosition(
-        target: LatLng(position.latitude, position.longitude),
-        zoom: 15,
-      );
-    });
-
-    if (_controllerCompleter.isCompleted) {
-      mapController.moveCamera(
-        CameraUpdate.newCameraPosition(initialCameraPosition),
-      );
-    }
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -354,7 +165,7 @@ class _VictimHomePageState extends State<VictimHomePage> {
                           query: _searchController.text,
                         );
                         if (selectedLocation != null) {
-                          _searchController.text = selectedLocation.name;
+                          _searchController.text = selectedLocation.title;
                         }
                       },
                       onTap: () async {
@@ -366,9 +177,12 @@ class _VictimHomePageState extends State<VictimHomePage> {
 
                         if (result != null) {
                           // The user has selected a location, update the text field and move the camera
-                          _searchController.text = result.name;
-                          mapController.animateCamera(
-                              CameraUpdate.newLatLng(result.coordinates));
+                          _searchController.text = result.title;
+                          GeoPoint geoPoint = result.location;
+                          LatLng latLng =
+                              LatLng(geoPoint.latitude, geoPoint.longitude);
+                          mapController
+                              .animateCamera(CameraUpdate.newLatLng(latLng));
                         }
                       },
                       decoration: InputDecoration(
@@ -526,43 +340,6 @@ class _VictimHomePageState extends State<VictimHomePage> {
   }
 }
 
-class SafeLocation {
-  final String name;
-  final LatLng coordinates;
-
-  SafeLocation(this.name, this.coordinates);
-}
-
-List<SafeLocation> safeLocations = [
-  SafeLocation('Büyükçekmece Acil Toplanma Alanı', LatLng(41.0284, 28.5870)),
-  SafeLocation('Adalar Acil Toplanma Alanı', LatLng(40.8490, 29.1233)),
-  SafeLocation('Arnavutköy Acil Toplanma Alanı', LatLng(41.185915, 28.729731)),
-  SafeLocation('Ataşehir Acil Toplanma Alanı', LatLng(40.9800, 29.0999)),
-  SafeLocation('Beykoz Acil Toplanma Alanı', LatLng(41.145317, 29.086227)),
-  SafeLocation('Beyoğlu Acil Toplanma Alanı', LatLng(41.0390, 28.9845)),
-  SafeLocation('Çekmeköy Acil Toplanma Alanı', LatLng(41.0157, 29.1018)),
-  SafeLocation('Esenler Acil Toplanma Alanı', LatLng(41.0141, 28.5354)),
-  SafeLocation('Esenyurt Acil Toplanma Alanı', LatLng(41.0336, 28.4020)),
-  SafeLocation('Eyüp Acil Toplanma Alanı', LatLng(41.089278, 28.923708)),
-  SafeLocation('Fatih Acil Toplanma Alanı', LatLng(41.007324, 28.978153)),
-  SafeLocation('Gaziosmanpaşa Acil Toplanma Alanı', LatLng(41.1145, 28.5920)),
-  SafeLocation('Kadıköy Acil Toplanma Alanı', LatLng(40.5839, 29.0516)),
-  SafeLocation('Kartal Acil Toplanma Alanı', LatLng(40.5416, 29.1028)),
-  SafeLocation('Küçükçekmece Acil Toplanma Alanı', LatLng(40.5954, 28.4658)),
-  SafeLocation('Maltepe Acil Toplanma Alanı', LatLng(40.939390, 29.131630)),
-  SafeLocation('Pendik Acil Toplanma Alanı', LatLng(40.5224, 29.1908)),
-  SafeLocation('Sarıyer Acil Toplanma Alanı', LatLng(41.106727, 29.017327)),
-  SafeLocation('Silivri Acil Toplanma Alanı', LatLng(41.0354, 28.1659)),
-  SafeLocation('Sultanbeyli Acil Toplanma Alanı', LatLng(40.5717, 29.1644)),
-  SafeLocation('Sultangazi Acil Toplanma Alanı', LatLng(41.0641, 28.5217)),
-  SafeLocation('Şile Acil Toplanma Alanı', LatLng(41.17755978, 29.62314785)),
-  SafeLocation('Ümraniye Acil Toplanma Alanı', LatLng(41.030254, 29.105804)),
-  SafeLocation('Üsküdar Acil Toplanma Alanı', LatLng(41.012825, 29.051967)),
-  SafeLocation('Zeytinburnu Acil Toplanma Alanı', LatLng(41.0037, 28.5456)),
-  SafeLocation('Bakırköy Acil Toplanma Alanı', LatLng(40.5726, 28.4957))
-  // Add more locations as needed...
-];
-
 class LocationSearch extends SearchDelegate<SafeLocation> {
   final List<SafeLocation> safeLocations;
 
@@ -602,23 +379,25 @@ class LocationSearch extends SearchDelegate<SafeLocation> {
     final suggestionsList = query.isEmpty
         ? safeLocations
         : safeLocations
-            .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
+            .where((p) => p.title.toLowerCase().contains(query.toLowerCase()))
             .toList();
 
     return ListView.builder(
       itemBuilder: (context, index) {
-        final String name = suggestionsList[index].name;
+        final String name = suggestionsList[index].title;
         final String nameLowercase = name.toLowerCase();
         final String queryLowercase = query.toLowerCase();
 
         final int queryIndex = nameLowercase.indexOf(queryLowercase);
         return ListTile(
           onTap: () {
+            GeoPoint geoPoint = suggestionsList[index].location;
+            LatLng latLng = LatLng(geoPoint.latitude, geoPoint.longitude);
             // Move the camera to the selected location
             mapController.moveCamera(
-              CameraUpdate.newLatLng(suggestionsList[index].coordinates),
+              CameraUpdate.newLatLng(latLng),
             );
-            query = suggestionsList[index].name;
+            query = suggestionsList[index].title;
             showResults(context);
           },
           title: queryIndex == -1
@@ -652,20 +431,22 @@ class LocationSearch extends SearchDelegate<SafeLocation> {
   Widget buildResults(BuildContext context) {
     // Find the selected location
     final SafeLocation? selectedLocation = safeLocations.firstWhereOrNull(
-      (location) => location.name.toLowerCase() == query.toLowerCase(),
+      (location) => location.title.toLowerCase() == query.toLowerCase(),
     );
 
     if (selectedLocation != null) {
+      GeoPoint geoPoint = selectedLocation.location;
+      LatLng latLng = LatLng(geoPoint.latitude, geoPoint.longitude);
       mapController.animateCamera(
-        CameraUpdate.newLatLng(selectedLocation.coordinates),
+        CameraUpdate.newLatLng(latLng),
       );
     }
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (selectedLocation != null) {
         close(context, selectedLocation);
       } else {
-        close(context, SafeLocation('', const LatLng(0, 0)));
+        close(context, SafeLocation(const GeoPoint(0, 0), " "));
       }
     });
     return Container();

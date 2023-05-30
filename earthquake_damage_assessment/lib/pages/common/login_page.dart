@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:earthquake_damage_assessment/pages/common/forgot_password_page.dart';
 import 'package:earthquake_damage_assessment/pages/victim/victim_home_page.dart';
 import 'package:earthquake_damage_assessment/service/auth.dart';
-import 'package:flutter/material.dart';
-import '../helper/helper_home_page.dart';
-import 'sign_in_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/helper_home_page.dart';
+import 'package:earthquake_damage_assessment/pages/common/first_page.dart';
+import 'package:earthquake_damage_assessment/pages/common/sign_in_page.dart';
 
 final TextEditingController _mailController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
