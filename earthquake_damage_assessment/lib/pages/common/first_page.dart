@@ -63,7 +63,7 @@ Padding explanationText() {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          width: 360,
+          width: 320,
           child: const Text(
             'Bridging the communication gap between earthquake victims and aid groups. ',
             textAlign: TextAlign.center,
