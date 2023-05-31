@@ -1,8 +1,8 @@
-import 'package:earthquake_damage_assessment/pages/helper/helper_profile_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/profile_page_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'helper_home_page.dart';
-import 'request_info_page.dart';
+import 'home_page_helper.dart';
+import 'request_info_page_helper.dart';
 import '../../service/helper_request.dart';
 
 class HelperRequestPage extends StatefulWidget {

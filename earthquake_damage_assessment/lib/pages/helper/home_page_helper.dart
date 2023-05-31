@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'package:earthquake_damage_assessment/pages/helper/helper_map_marker.dart';
+import 'package:earthquake_damage_assessment/pages/helper/map_marker_helper.dart';
 import 'package:earthquake_damage_assessment/service/location_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../service/helper_request.dart';
-import 'helper_profile_page.dart';
-import 'helper_request_page.dart';
+import 'profile_page_helper.dart';
+import 'request_page_helper.dart';
 
 class HelperHomePage extends StatefulWidget {
   const HelperHomePage({super.key});

@@ -1,20 +1,17 @@
-import 'package:earthquake_damage_assessment/pages/victim/victim_editing_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/request_page_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../service/victim_request.dart';
-import 'victim_home_page.dart';
+import 'home_page_helper.dart';
 import '../../service/auth.dart';
 import '../common/login_page.dart';
+import 'editing_page_helper.dart';
 
-String userName = "-";
-String mail = "-";
 String nameSurname = "-";
-String location = "-";
+String organization = "-";
+String mail = "-";
 String phone = "-";
-String bloodType = "-";
-String emergencyPerson = "-";
 
 class GetInfo {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -28,46 +25,47 @@ class GetInfo {
     final docSnapshot = await docRef.get();
     final data = docSnapshot.data();
 
-    String fetchedUserName = data?['userName'] ?? userName;
-    String fetchedMail = data?['mail'] ?? mail;
-    String fetchedLocation = data?['location'] ?? location;
     String fetchedNameSurname = data?['nameSurname'] ?? nameSurname;
+    String fetchedOrganization = data?['organization'] ?? organization;
+    String fetchedMail = data?['mail'] ?? mail;
     String fetchedPhone = data?['phone'] ?? phone;
-    String fetchedBloodType = data?['bloodType'] ?? bloodType;
-    String fetchedEmergencyPerson = data?['emergencyPerson'] ?? emergencyPerson;
 
     return {
-      'userName': fetchedUserName,
-      'mail': fetchedMail,
       'nameSurname': fetchedNameSurname,
-      'location': fetchedLocation,
+      'organization': fetchedOrganization,
+      'mail': fetchedMail,
       'phone': fetchedPhone,
-      'bloodType': fetchedBloodType,
-      'emergencyPerson': fetchedEmergencyPerson
     };
   }
 }
 
-class VictimProfilePage extends StatefulWidget {
-  const VictimProfilePage({Key? key}) : super(key: key);
+class HelperProfilePage extends StatefulWidget {
+  const HelperProfilePage({Key? key}) : super(key: key);
 
   @override
-  _VictimProfilePageState createState() => _VictimProfilePageState();
+  _HelperProfilePageState createState() => _HelperProfilePageState();
 }
 
-class _VictimProfilePageState extends State<VictimProfilePage> {
+class _HelperProfilePageState extends State<HelperProfilePage> {
   final getInfo = GetInfo();
   late Future<Map<String, String>> fetchedData;
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const VictimHomePage()),
+        MaterialPageRoute(builder: (context) => const HelperRequestPage()),
+      );
+    }
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HelperHomePage()),
       );
     }
   }
@@ -81,14 +79,10 @@ class _VictimProfilePageState extends State<VictimProfilePage> {
   Future<Map<String, String>> fetchData() async {
     Map<String, String> fetchedData = await getInfo.getData();
 
-    userName = fetchedData['userName']!;
-    mail = fetchedData['mail']!;
-    location = fetchedData['location']!;
     nameSurname = fetchedData['nameSurname']!;
+    mail = fetchedData['mail']!;
     phone = fetchedData['phone']!;
-    bloodType = fetchedData['bloodType']!;
-    emergencyPerson = fetchedData['emergencyPerson']!;
-
+    organization = fetchedData['organization']!;
     return fetchedData;
   }
 
@@ -98,7 +92,7 @@ class _VictimProfilePageState extends State<VictimProfilePage> {
         onWillPop: () async {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const VictimHomePage()),
+            MaterialPageRoute(builder: (context) => const HelperHomePage()),
           );
           return true;
         },
@@ -114,6 +108,10 @@ class _VictimProfilePageState extends State<VictimProfilePage> {
           bottomNavigationBar: BottomNavigationBar(
             items: const [
               BottomNavigationBarItem(
+                icon: Icon(Icons.report),
+                label: 'Requests',
+              ),
+              BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Home',
               ),
@@ -122,7 +120,7 @@ class _VictimProfilePageState extends State<VictimProfilePage> {
                 label: 'Profile',
               ),
             ],
-            currentIndex: 1,
+            currentIndex: 2,
             selectedItemColor: const Color.fromRGBO(199, 0, 56, 0.89),
             onTap: _onItemTapped,
           ),
@@ -148,7 +146,7 @@ AppBar appBarButtons(context) {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const VictimHomePage()),
+          MaterialPageRoute(builder: (context) => const HelperHomePage()),
         );
       },
       color: Colors.black,
@@ -160,7 +158,7 @@ AppBar appBarButtons(context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const VictimEditingPage()),
+            MaterialPageRoute(builder: (context) => const HelperEditingPage()),
           );
         },
         icon: const Icon(Icons.edit),
@@ -174,15 +172,11 @@ ListView body(Map<String, String> data) {
   return ListView(
     physics: const BouncingScrollPhysics(),
     children: [
-      profilePhoto(data['nameSurname']!),
+      profilePhoto(data['organization']!),
       const SizedBox(
         height: 20,
       ),
       nameText(data['nameSurname']!),
-      locationText(data['location']!),
-      const SizedBox(
-        height: 20,
-      ),
       const SizedBox(
         height: 20,
       ),
@@ -190,7 +184,7 @@ ListView body(Map<String, String> data) {
       const SizedBox(
         height: 10,
       ),
-      generalInfoBloodSeconPerson(data['bloodType']!, data['emergencyPerson']!),
+      generalInfoOrganization(data['organization']!),
       const SizedBox(
         height: 20,
       ),
@@ -203,26 +197,14 @@ ListView body(Map<String, String> data) {
       ),
       const SizedBox(
         height: 20,
-      ),
-      FutureBuilder<Container>(
-        future: requestsTable(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return snapshot.data!;
-          }
-        },
-      ),
+      )
     ],
   );
 }
 
-CircleAvatar profilePhoto(String username) {
+CircleAvatar profilePhoto(String organization) {
   String initials =
-      username.isNotEmpty == true ? username[0].toUpperCase() : '';
+      organization.isNotEmpty == true ? organization[0].toUpperCase() : '';
   return CircleAvatar(
     backgroundColor: const Color.fromRGBO(199, 0, 56, 0.89),
     radius: 120,
@@ -243,18 +225,6 @@ Center nameText(String namesurname) {
       style: const TextStyle(
         color: Colors.black,
         fontSize: 20,
-      ),
-    ),
-  );
-}
-
-Center locationText(String location) {
-  return Center(
-    child: Text(
-      location,
-      style: const TextStyle(
-        color: Colors.black,
-        fontSize: 15,
       ),
     ),
   );
@@ -287,13 +257,13 @@ Row generalInfoPhoneMail(phoneNum, mail) {
   );
 }
 
-Row generalInfoBloodSeconPerson(bloodType, secondPerson) {
+Row generalInfoOrganization(organization) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      const Icon(Icons.bloodtype),
+      const Icon(Icons.apartment_sharp),
       Text(
-        bloodType,
+        organization,
         style: const TextStyle(
           color: Colors.black,
           fontSize: 16,
@@ -302,66 +272,16 @@ Row generalInfoBloodSeconPerson(bloodType, secondPerson) {
       const SizedBox(
         width: 20,
       ),
-      const Icon(Icons.account_box_rounded),
-      Text(
-        secondPerson,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-        ),
-      ),
     ],
-  );
-}
-
-Future<Container> requestsTable() async {
-  final List<VictimRequest> requestList = await getRequestVictim();
-
-  return Container(
-    child: DataTable(
-      columns: const [
-        DataColumn(
-            label: Expanded(
-                child: Text(
-          'Request',
-          textAlign: TextAlign.center,
-        ))),
-        DataColumn(
-            label: Expanded(
-                child: Text(
-          'Type',
-          textAlign: TextAlign.center,
-        ))),
-        DataColumn(
-            label: Expanded(
-                child: Text(
-          'Status',
-          textAlign: TextAlign.center,
-        ))),
-      ],
-      rows: requestList.map((request) {
-        final index = requestList.indexOf(request) + 1;
-        return DataRow(
-          cells: [
-            DataCell(Center(child: Text('Request $index'))),
-            DataCell(Center(child: Text(request.type))),
-            DataCell(Center(child: Text(request.status))),
-          ],
-        );
-      }).toList(),
-    ),
   );
 }
 
 Future<void> logout(context) async {
   await AuthService().signOut();
-  userName = "-";
-  mail = "-";
   nameSurname = "-";
-  location = "-";
+  organization = "-";
+  mail = "-";
   phone = "-";
-  bloodType = "-";
-  emergencyPerson = "-";
   Navigator.of(context).pushAndRemoveUntil(
     CupertinoPageRoute(builder: (context) => const LoginPage()),
     (_) => false,

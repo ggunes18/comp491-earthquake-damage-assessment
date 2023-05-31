@@ -1,14 +1,48 @@
 import 'package:flutter/material.dart';
-import '../common/phone_field.dart';
-import 'helper_profile_page.dart';
-import 'package:earthquake_damage_assessment/pages/helper/helper_edit.dart';
 import 'package:flutter/services.dart';
+import '../common/phone_field.dart';
+import 'profile_page_victim.dart';
+import 'package:earthquake_damage_assessment/pages/victim/edit_victim.dart';
 
 final TextEditingController _nameController = TextEditingController();
+final TextEditingController _locationController = TextEditingController();
 final TextEditingController _phoneController = TextEditingController();
+String _bloodTypeController = 'A+';
+final TextEditingController _emergencyPersonController =
+    TextEditingController();
 
-class HelperEditingPage extends StatelessWidget {
-  const HelperEditingPage({super.key});
+const bloodTypes = <String>['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', '0+', '0-'];
+
+class VictimEditingPage extends StatefulWidget {
+  const VictimEditingPage({Key? key}) : super(key: key);
+
+  @override
+  _VictimEditingPageState createState() => _VictimEditingPageState();
+}
+
+class _VictimEditingPageState extends State<VictimEditingPage> {
+  Widget bloodTypeBox() {
+    return DropdownButton<String>(
+      value: _bloodTypeController,
+      items: bloodTypes.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 15),
+          ),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          _bloodTypeController = newValue!;
+        });
+      },
+      focusColor: const Color.fromARGB(255, 226, 226, 226),
+      autofocus: true,
+      elevation: 15,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +54,33 @@ class HelperEditingPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 10),
               editText(),
               const SizedBox(height: 10),
               texts("Name and Surname"),
               textFields("Please enter your name and surname", _nameController),
               const SizedBox(height: 10),
+              texts("Location"),
+              textFields(
+                  "Please enter your location (city/county/neighborhood)",
+                  _locationController),
+              const SizedBox(height: 10),
               texts("Phone Number"),
               phoneField("5xx-xxx-xxxx", _phoneController),
               const SizedBox(height: 10),
-              submitButton(context, _nameController, _phoneController),
+              texts("Blood Type"),
+              bloodTypeBox(),
+              const SizedBox(height: 10),
+              texts("Emergency Person Number"),
+              phoneField("5xx-xxx-xxxx", _emergencyPersonController),
+              const SizedBox(height: 10),
+              submitButton(
+                  context,
+                  _nameController,
+                  _locationController,
+                  _phoneController,
+                  _bloodTypeController,
+                  _emergencyPersonController),
             ],
           ),
         ),
@@ -56,12 +107,11 @@ AppBar appBarButtons(context) {
       builder: (BuildContext context) {
         return BackButton(
           onPressed: () {
-            _nameController.clear();
-            _phoneController.clear();
+            clearTextFields();
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const HelperProfilePage()),
+                  builder: (context) => const VictimProfilePage()),
             );
           },
           color: Colors.black,
@@ -140,7 +190,7 @@ void showInvalidFieldsDialog(BuildContext context, String errorText) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Missing Information!'),
+        title: const Text("Missing information!"),
         content: Text(errorText),
         actions: [
           TextButton(
@@ -156,34 +206,53 @@ void showInvalidFieldsDialog(BuildContext context, String errorText) {
 }
 
 Future<bool> saveCredentials(
-  context,
-  TextEditingController nameController,
-  TextEditingController phoneController,
-) async {
-  if (nameController.text != "" && phoneController.text != "") {
-    await HelperSaveService()
-        .save(nameSurname: _nameController.text, phone: _phoneController.text);
+    context,
+    TextEditingController nameController,
+    TextEditingController locationController,
+    TextEditingController phoneController,
+    String bloodTypeController,
+    TextEditingController emergencyPersonController) async {
+  if (nameController.text != "" &&
+      locationController.text != "" &&
+      phoneController.text != "" &&
+      emergencyPersonController.text != "") {
+    await VictimSaveService().save(
+        nameSurname: _nameController.text,
+        location: _locationController.text,
+        phone: _phoneController.text,
+        bloodType: _bloodTypeController,
+        emergencyPerson: _emergencyPersonController.text);
     return false;
   } else {
     return true;
   }
 }
 
-TextButton submitButton(context, TextEditingController nameController,
-    TextEditingController phoneController) {
+TextButton submitButton(
+  context,
+  TextEditingController nameController,
+  TextEditingController locationController,
+  TextEditingController phoneController,
+  String bloodTypeController,
+  TextEditingController emergencyPersonController,
+) {
   return TextButton(
     onPressed: () async {
-      bool ifError =
-          await saveCredentials(context, nameController, phoneController);
+      bool ifError = await saveCredentials(
+          context,
+          nameController,
+          locationController,
+          phoneController,
+          bloodTypeController,
+          emergencyPersonController);
       if (ifError == true) {
         showInvalidFieldsDialog(
             context, "Please make sure you provided every information!");
       } else {
-        _nameController.clear();
-        _phoneController.clear();
+        clearTextFields();
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const HelperProfilePage()),
+          MaterialPageRoute(builder: (context) => const VictimProfilePage()),
         );
       }
     },
@@ -200,4 +269,11 @@ TextButton submitButton(context, TextEditingController nameController,
       ),
     ),
   );
+}
+
+void clearTextFields() {
+  _nameController.clear();
+  _locationController.clear();
+  _phoneController.clear();
+  _emergencyPersonController.clear();
 }

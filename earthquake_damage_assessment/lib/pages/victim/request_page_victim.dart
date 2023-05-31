@@ -3,7 +3,7 @@ import 'package:earthquake_damage_assessment/service/location_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'victim_home_page.dart';
+import 'home_page_victim.dart';
 import 'package:intl/intl.dart';
 
 final TextEditingController _nameController = TextEditingController();

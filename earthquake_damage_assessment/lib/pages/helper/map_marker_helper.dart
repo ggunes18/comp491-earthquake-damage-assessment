@@ -1,4 +1,4 @@
-import 'package:earthquake_damage_assessment/pages/helper/request_info_page.dart';
+import 'package:earthquake_damage_assessment/pages/helper/request_info_page_helper.dart';
 import 'package:earthquake_damage_assessment/service/helper_request.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

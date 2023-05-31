@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:earthquake_damage_assessment/pages/victim/home_page_buttons.dart';
+import 'package:earthquake_damage_assessment/pages/victim/home_page_buttons_victim.dart';
 import 'package:earthquake_damage_assessment/service/location_services.dart';
 import 'package:earthquake_damage_assessment/service/safe_locations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'victim_profile_page.dart';
+import 'profile_page_victim.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:collection/collection.dart';
 
