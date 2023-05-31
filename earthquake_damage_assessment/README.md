@@ -51,6 +51,7 @@ Please note that you'll need a device (emulator or physical device) connected to
 
 ## Contact
 If you have any questions or suggestions regarding the Earthquake Helper App, feel free to contact us at:
+
 bberktay19@ku.edu.tr
 
 beyzagundogan19@ku.edu.tr
