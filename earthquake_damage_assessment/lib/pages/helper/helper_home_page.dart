@@ -93,6 +93,9 @@ class _HelperHomePageState extends State<HelperHomePage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
     return Scaffold(
         backgroundColor: Colors.white,
         bottomNavigationBar: BottomNavigationBar(
@@ -138,7 +141,7 @@ class _HelperHomePageState extends State<HelperHomePage> {
 
                   // Map Integration
                   Container(
-                    height: 735,
+                    height: screenHeight * 0.87,
                     width: screenWidth,
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
