@@ -206,7 +206,7 @@ class _VictimHomePageState extends State<VictimHomePage> {
 
                     //Google Map Api
                     Container(
-                      height: screenHeight * 0.52,
+                      height: screenHeight * 0.51,
                       width: screenWidth,
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
