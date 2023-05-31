@@ -27,25 +27,26 @@ To run the Earthquake Helper App, you'll need to have the following:
 
 ```shell
 git clone https://github.com/ggunes18/comp491-earthquake-damage-assessment.git
-```shell
+```
 
 2. Navigate to the project directory:
+```
 
 ```shell
 cd earthquake_damage_assessment
-```shell
+```
 
 3. Install the Flutter dependencies:
 
 ```shell
 flutter pub get
-```shell
+```
 
 4. Run the app:
 
 ```shell
 flutter run
-```shell
+```
 
 Please note that you'll need a device (emulator or physical device) connected to your development environment to run the app.
 
