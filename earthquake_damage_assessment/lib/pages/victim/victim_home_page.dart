@@ -118,7 +118,7 @@ class _VictimHomePageState extends State<VictimHomePage> {
         return false;
       },
       child: Scaffold(
-          resizeToAvoidBottomInset: true,
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           bottomNavigationBar: BottomNavigationBar(
             items: const [

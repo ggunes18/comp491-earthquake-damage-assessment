@@ -47,7 +47,7 @@ class _VictimEditingPageState extends State<VictimEditingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       appBar: appBarButtons(context),
       body: SafeArea(
         child: Center(
