@@ -30,7 +30,6 @@ git clone https://github.com/ggunes18/comp491-earthquake-damage-assessment.git
 ```
 
 2. Navigate to the project directory:
-```
 
 ```shell
 cd earthquake_damage_assessment
