@@ -14,7 +14,7 @@ This repository contains the source code for the Earthquake Help Joint Platform 
 
 ## Prerequisites
 
-To run the Earthquake Helper App, you'll need to have the following:
+To run the KuHelp, you'll need to have the following:
 
 - Flutter SDK: [Installation Guide](https://flutter.dev/docs/get-started/install)
 - Firebase Account: [Firebase Console](https://console.firebase.google.com/)
@@ -50,7 +50,7 @@ flutter run
 Please note that you'll need a device (emulator or physical device) connected to your development environment to run the app.
 
 ## Contact
-If you have any questions or suggestions regarding the Earthquake Helper App, feel free to contact us at:
+If you have any questions or suggestions regarding the KuHelp, feel free to contact us at:
 
 bberktay19@ku.edu.tr
 
