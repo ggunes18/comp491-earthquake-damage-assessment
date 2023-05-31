@@ -52,8 +52,12 @@ Please note that you'll need a device (emulator or physical device) connected to
 ## Contact
 If you have any questions or suggestions regarding the Earthquake Helper App, feel free to contact us at:
 bberktay19@ku.edu.tr
+
 beyzagundogan19@ku.edu.tr
+
 ggunes18@ku.edu.tr
+
 yerdemirler18@ku.edu.tr
+
 
 Thank you for your interest in our project! We hope the KuHelp can make a positive impact in connecting victims with helper organizations during earthquakes or any kind of disasters.
