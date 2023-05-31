@@ -108,6 +108,9 @@ class _VictimHomePageState extends State<VictimHomePage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
     return WillPopScope(
       onWillPop: () async {
         // Disable the back button
@@ -115,6 +118,7 @@ class _VictimHomePageState extends State<VictimHomePage> {
         return false;
       },
       child: Scaffold(
+          resizeToAvoidBottomInset: true,
           backgroundColor: Colors.white,
           bottomNavigationBar: BottomNavigationBar(
             items: const [
@@ -202,7 +206,7 @@ class _VictimHomePageState extends State<VictimHomePage> {
 
                     //Google Map Api
                     Container(
-                      height: 450,
+                      height: screenHeight * 0.53,
                       width: screenWidth,
                       decoration: BoxDecoration(
                         color: Colors.grey[200],

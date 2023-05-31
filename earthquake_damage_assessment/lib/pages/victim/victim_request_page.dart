@@ -21,6 +21,7 @@ class VictimRequestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         leading: BackButton(
           color: Colors.black,
@@ -39,7 +40,7 @@ class VictimRequestPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 10),
               requestText(requestType),
               const SizedBox(height: 10),
               texts("Your Name"),

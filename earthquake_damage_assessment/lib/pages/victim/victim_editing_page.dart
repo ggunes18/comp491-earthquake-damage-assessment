@@ -47,13 +47,14 @@ class _VictimEditingPageState extends State<VictimEditingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: appBarButtons(context),
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 10),
               editText(),
               const SizedBox(height: 10),
               texts("Name and Surname"),
