@@ -312,42 +312,40 @@ class _HelperRequestPageState extends State<HelperRequestPage> {
             onTap: _onItemTapped,
           ),
           body: SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      Row(
-                        children: const [
-                          Text(
-                            "KuHelp",
-                            style: TextStyle(
-                              color: Color.fromRGBO(199, 0, 56, 0.89),
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        ],
-                      ),
-                      FutureBuilder<Container>(
-                        future: requestDataTable(context),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            return snapshot.data!;
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Row(
+                      children: const [
+                        Text(
+                          "KuHelp",
+                          style: TextStyle(
+                            color: Color.fromRGBO(199, 0, 56, 0.89),
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    FutureBuilder<Container>(
+                      future: requestDataTable(context),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return snapshot.data!;
+                        }
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ));
