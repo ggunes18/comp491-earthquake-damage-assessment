@@ -4,14 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'home_page_victim.dart';
-import 'package:intl/intl.dart';
 
 final TextEditingController _nameController = TextEditingController();
 final TextEditingController _needsController = TextEditingController();
 final TextEditingController _directionsController = TextEditingController();
 final TextEditingController _secondPersonController = TextEditingController();
 final TextEditingController _infoController = TextEditingController();
-double emergencyLevel = 0;
+int emergencyLevel = 0;
 
 class VictimRequestPage extends StatelessWidget {
   final String requestType;
@@ -136,7 +135,7 @@ RatingBar ratingBar() {
     ),
     itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
     onRatingUpdate: (rating) {
-      emergencyLevel = rating;
+      emergencyLevel = rating.toInt();
     },
   );
 }
