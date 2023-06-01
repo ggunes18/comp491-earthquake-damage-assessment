@@ -317,38 +317,57 @@ Row generalInfoBloodSeconPerson(bloodType, secondPerson) {
 Future<Container> requestsTable() async {
   final List<VictimRequest> requestList = await getRequestVictim();
 
+  final rows = requestList.reversed.toList().map((request) {
+    final index = requestList.reversed.toList().indexOf(request) + 1;
+    return DataRow(
+      cells: [
+        DataCell(Container(
+          alignment: Alignment.center,
+          child: Text('Request $index'),
+        )),
+        DataCell(Container(
+          alignment: Alignment.center,
+          child: Text(request.type),
+        )),
+        DataCell(Container(
+          alignment: Alignment.center,
+          child: Text(request.status),
+        )),
+      ],
+    );
+  }).toList();
+
   return Container(
     child: DataTable(
+      dataRowHeight: 50,
+      columnSpacing: 10,
       columns: const [
         DataColumn(
-            label: Expanded(
-                child: Text(
-          'Request',
-          textAlign: TextAlign.center,
-        ))),
+          label: Expanded(
+            child: Text(
+              'Request',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
         DataColumn(
-            label: Expanded(
-                child: Text(
-          'Type',
-          textAlign: TextAlign.center,
-        ))),
+          label: Expanded(
+            child: Text(
+              'Type',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
         DataColumn(
-            label: Expanded(
-                child: Text(
-          'Status',
-          textAlign: TextAlign.center,
-        ))),
+          label: Expanded(
+            child: Text(
+              'Status',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
       ],
-      rows: requestList.map((request) {
-        final index = requestList.indexOf(request) + 1;
-        return DataRow(
-          cells: [
-            DataCell(Center(child: Text('Request $index'))),
-            DataCell(Center(child: Text(request.type))),
-            DataCell(Center(child: Text(request.status))),
-          ],
-        );
-      }).toList(),
+      rows: rows,
     ),
   );
 }
